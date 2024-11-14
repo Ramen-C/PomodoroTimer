@@ -1,4 +1,4 @@
-package com.example.pomodorotimer.ui.theme
+package com.example.pomodorotimer.theme
 
 import androidx.compose.ui.graphics.Color
 

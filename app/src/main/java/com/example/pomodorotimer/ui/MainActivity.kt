@@ -1,4 +1,4 @@
-package com.example.pomodorotimer
+package com.example.pomodorotimer.ui
 
 import android.Manifest
 import android.app.NotificationChannel
@@ -12,10 +12,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import com.example.pomodorotimer.ui.theme.PomodoroTimerTheme
+import com.example.pomodorotimer.model.TimerViewModel
+import com.example.pomodorotimer.model.TaskViewModel
+import com.example.pomodorotimer.theme.PomodoroTimerTheme
 
 class MainActivity : ComponentActivity() {
     private val timerViewModel: TimerViewModel by viewModels()
+    private val taskViewModel: TaskViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // 如果没有自定义的 enableEdgeToEdge()，请注释掉
@@ -29,7 +32,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             PomodoroTimerTheme {
-                TimerScreen(timerViewModel)
+                TimerScreen(timerViewModel = timerViewModel, taskViewModel = taskViewModel)
             }
         }
 
@@ -86,3 +89,5 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+
