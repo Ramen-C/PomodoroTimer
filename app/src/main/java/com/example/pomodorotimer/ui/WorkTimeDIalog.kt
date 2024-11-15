@@ -12,7 +12,7 @@ fun WorkTimeDialog(
     onDismiss: () -> Unit,
     onConfirm: (Int) -> Unit
 ) {
-    var workTime by remember { mutableStateOf(initialWorkTime) }
+    var workTime by remember {mutableStateOf(initialWorkTime) }
 
     AlertDialog(
         onDismissRequest = onDismiss,

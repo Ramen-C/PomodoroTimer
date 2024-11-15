@@ -2,6 +2,7 @@
 package com.example.pomodorotimer.model
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
@@ -10,10 +11,10 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 
 class TimerViewModel : ViewModel() {
-    var workTime by mutableStateOf(25 * 60)  // 默认 25 分钟
-    var breakTime by mutableStateOf(5 * 60)  // 默认 5 分钟
+    var workTime by mutableIntStateOf(25 * 60)  // 默认 25 分钟
+    private var breakTime by mutableIntStateOf(5 * 60)  // 默认 5 分钟
 
-    var timeLeft by mutableStateOf(workTime)  // 当前剩余时间
+    var timeLeft by mutableIntStateOf(workTime)  // 当前剩余时间
         private set
 
     var isRunning by mutableStateOf(false)
@@ -24,10 +25,10 @@ class TimerViewModel : ViewModel() {
         get() = isWorkingState  // 通过 getter 公开 isWorking
 
     private var timerJob: Job? = null
-    var cyclesCompleted by mutableStateOf(0)  // 计时器循环次数
+    private var cyclesCompleted by mutableIntStateOf(0)  // 计时器循环次数
 
     val timerFinishedEvent = MutableLiveData<Unit>()
-    val updateTimeEvent = MutableLiveData<Unit>()
+    private val updateTimeEvent = MutableLiveData<Unit>()
 
     // 更新工作时间
     fun updateWorkTime(newWorkTime: Int) {
@@ -64,7 +65,7 @@ class TimerViewModel : ViewModel() {
     }
 
     // 切换工作与休息周期
-    fun toggleWorkRestCycle() {
+    private fun toggleWorkRestCycle() {
         isWorkingState = !isWorkingState
         cyclesCompleted += 1
         timeLeft = if (isWorking) workTime else breakTime
