@@ -1,0 +1,7 @@
+# 忽略 Android Studio 生成的文件
+*.iml
+.gradle/
+.idea/
+
+# 忽略本地配置文件
+local.properties
