@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("kotlin-kapt")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -11,6 +11,7 @@ android {
     defaultConfig {
         applicationId = "com.example.pomodorotimer"
         minSdk = 24
+        //noinspection OldTargetApi
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -66,7 +67,7 @@ dependencies {
 
 
     // Room Compiler
-    kapt(libs.androidx.room.compiler) // 添加 Room 编译器依赖项
+    ksp(libs.androidx.room.compiler) // 添加 Room 编译器依赖项
 
     implementation(libs.play.services.gcm)
     implementation(libs.androidx.runtime.livedata)
