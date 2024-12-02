@@ -1,17 +1,19 @@
 package com.example.pomodorotimer.ui
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import com.example.pomodorotimer.controller.TaskController
 import com.example.pomodorotimer.model.Task
-
 
 @Composable
 fun EditTaskDialog(
     task: Task?,
+    taskController: TaskController,
     onDismiss: () -> Unit,
-    onSave: (Task) -> Unit,
-    onDelete: ((Task) -> Unit)? = null
+    onSaveComplete: () -> Unit,
+    onDeleteComplete: () -> Unit
 ) {
     var name by remember { mutableStateOf(task?.name ?: "") }
     var description by remember { mutableStateOf(task?.description ?: "") }
@@ -39,11 +41,12 @@ fun EditTaskDialog(
             TextButton(onClick = {
                 if (name.isNotBlank()) {
                     val newTask = Task(
-                        id = task?.id ?: 0,
+                        id = task?.id ?: 0L,
                         name = name,
                         description = description
                     )
-                    onSave(newTask)
+                    taskController.saveTask(newTask, onSaveComplete)  // 传递回调
+                    onDismiss()  // 关闭对话框
                 }
             }) {
                 Text("保存")
@@ -51,8 +54,11 @@ fun EditTaskDialog(
         },
         dismissButton = {
             Row {
-                if (task != null && onDelete != null) {
-                    TextButton(onClick = { onDelete(task) }) {
+                if (task != null) {
+                    TextButton(onClick = {
+                        taskController.deleteTask(task, onDeleteComplete)  // 传递回调
+                        onDismiss()  // 关闭对话框
+                    }) {
                         Text("删除")
                     }
                 }

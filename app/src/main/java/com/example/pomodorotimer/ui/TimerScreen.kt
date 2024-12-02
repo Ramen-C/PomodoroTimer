@@ -1,5 +1,6 @@
 package com.example.pomodorotimer.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -7,19 +8,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pomodorotimer.model.TaskViewModel
-import com.example.pomodorotimer.model.TimerViewModel
-import java.util.Locale
+import com.example.pomodorotimer.controller.TaskController
+import com.example.pomodorotimer.controller.TimerController
+import com.example.pomodorotimer.model.Task
+import androidx.compose.runtime.collectAsState
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun TimerScreen(
-    timerViewModel: TimerViewModel,
-    taskViewModel: TaskViewModel
+    timerController: TimerController,
+    taskController: TaskController
 ) {
-    val timeLeft = timerViewModel.timeLeft
-    val isRunning = timerViewModel.isRunning
-    val isWorking = timerViewModel.isWorking
-    var workTime by remember { mutableStateOf(timerViewModel.workTime / 60) }
+    // 使用 collectAsState() 来观察 TimerController 中的状态
+    val timeLeft by timerController.timeLeft.collectAsState()
+    val isRunning by timerController.isRunning.collectAsState()
+    val isWorking by timerController.isWorking.collectAsState()
+
+    var currentTask by remember { mutableStateOf<Task?>(null) }
 
     var showDialog by remember { mutableStateOf(false) }
     var showTaskDialog by remember { mutableStateOf(false) }
@@ -30,10 +35,11 @@ fun TimerScreen(
     // 显示任务管理对话框
     if (showTaskDialog) {
         TaskDialog(
-            taskViewModel = taskViewModel,
+            taskController = taskController,
             onDismiss = { showTaskDialog = false },
             onTaskSelected = { task ->
-                timerViewModel.currentTask = task
+                currentTask = task
+                timerController.currentTask = task  // 更新 TimerController 中的任务
                 showTaskDialog = false
             }
         )
@@ -42,11 +48,10 @@ fun TimerScreen(
     // 显示设置工作时间对话框
     if (showDialog) {
         WorkTimeDialog(
-            initialWorkTime = workTime,
+            initialWorkTime = minutes,
             onDismiss = { showDialog = false },
             onConfirm = { newWorkTime ->
-                timerViewModel.updateWorkTime(newWorkTime * 60)
-                workTime = newWorkTime
+                timerController.updateWorkTime(newWorkTime * 60)
                 showDialog = false
             }
         )
@@ -61,7 +66,7 @@ fun TimerScreen(
     ) {
         // 显示当前任务
         Text(
-            text = "当前任务：${timerViewModel.currentTask?.name ?: "未选择"}",
+            text = "当前任务：${currentTask?.name ?: "未选择"}",
             fontSize = 20.sp
         )
 
@@ -72,10 +77,11 @@ fun TimerScreen(
 
         // 显示剩余时间
         Text(
-            text = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds),
+            text = String.format("%02d:%02d", minutes, seconds),
             fontSize = 48.sp,
             modifier = Modifier.padding(vertical = 16.dp)
         )
+
         Text(
             text = if (isRunning) {
                 if (isWorking) "工作中" else "休息中"
@@ -95,9 +101,9 @@ fun TimerScreen(
 
             Button(onClick = {
                 if (isRunning) {
-                    timerViewModel.pauseTimer()
+                    timerController.pauseTimer()
                 } else {
-                    timerViewModel.startTimer()
+                    timerController.startTimer()
                 }
             }) {
                 Text(if (isRunning) "暂停" else "开始")
@@ -105,11 +111,9 @@ fun TimerScreen(
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            Button(onClick = { timerViewModel.resetTimer() }) {
+            Button(onClick = { timerController.resetTimer() }) {
                 Text("重置")
             }
-
-
         }
     }
 }

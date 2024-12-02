@@ -4,27 +4,43 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.pomodorotimer.controller.TaskController
 import com.example.pomodorotimer.model.Task
-import com.example.pomodorotimer.model.TaskViewModel
 
 @Composable
 fun TaskDialog(
-    taskViewModel: TaskViewModel,
+    taskController: TaskController,
     onDismiss: () -> Unit,
     onTaskSelected: (Task) -> Unit
 ) {
     var showEditDialog by remember { mutableStateOf(false) }
     var currentTask by remember { mutableStateOf<Task?>(null) }
+    var taskList by remember { mutableStateOf<List<Task>>(emptyList()) }
+
+    // 加载任务列表
+    LaunchedEffect(true) {
+        taskController.getAllTasks { tasks ->
+            taskList = tasks
+        }
+    }
 
     if (showEditDialog) {
         EditTaskDialog(
             task = currentTask,
+            taskController = taskController,
             onDismiss = { showEditDialog = false },
-            onSave = { task ->
-                taskViewModel.insertTask(task)
+            onSaveComplete = {
+                taskController.updateTasks { tasks ->
+                    taskList = tasks
+                }
+                showEditDialog = false
+            },
+            onDeleteComplete = {
+                taskController.updateTasks { tasks ->
+                    taskList = tasks
+                }
                 showEditDialog = false
             }
         )
@@ -36,7 +52,7 @@ fun TaskDialog(
         text = {
             Column {
                 TaskList(
-                    taskViewModel = taskViewModel,
+                    tasks = taskList,
                     onTaskSelected = { task ->
                         onTaskSelected(task)
                     }
@@ -63,22 +79,18 @@ fun TaskDialog(
 
 @Composable
 fun TaskList(
-    taskViewModel: TaskViewModel,
+    tasks: List<Task>,
     onTaskSelected: (Task) -> Unit
 ) {
-    val taskList by taskViewModel.allTasks.observeAsState(emptyList())
-
-    if (taskList.isEmpty()) {
+    if (tasks.isEmpty()) {
         Text("没有可选择的任务", style = MaterialTheme.typography.bodyLarge)
     } else {
         LazyColumn {
-            items(taskList.size) { index ->
-                val task = taskList[index]
+            items(tasks.size) { index ->
+                val task = tasks[index]
                 TaskItem(
                     task = task,
-                    onClick = {
-                        onTaskSelected(task)
-                    }
+                    onClick = { onTaskSelected(task) }
                 )
             }
         }
