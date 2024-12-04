@@ -27,22 +27,27 @@ fun TaskScreen(
         }
     }
 
+    // 显示编辑对话框
     if (showDialog) {
-        // 添加缺少的回调函数 onSaveComplete 和 onDeleteComplete
         EditTaskDialog(
             task = currentTask,
             taskController = taskController,
             onSaveComplete = {
-                showDialog = false // 保存完成后，关闭对话框
-                // 这里可以根据需要刷新任务列表或进行其他操作
+                taskController.getAllTasks { tasks ->
+                    taskList = tasks
+                }
+                showDialog = false // 保存后关闭对话框
             },
             onDeleteComplete = {
-                showDialog = false // 删除完成后，关闭对话框
-                // 这里可以根据需要刷新任务列表或进行其他操作
+                taskController.getAllTasks { tasks ->
+                    taskList = tasks
+                }
+                showDialog = false // 删除后关闭对话框
             },
             onDismiss = { showDialog = false } // 取消操作
         )
     }
+
 
     Scaffold(
         topBar = {
@@ -64,6 +69,7 @@ fun TaskScreen(
                     task = task,
                     onClick = { onTaskSelected(task) },
                     onLongClick = {
+                        // 长按时更新 currentTask 并显示对话框
                         currentTask = task
                         showDialog = true
                     }

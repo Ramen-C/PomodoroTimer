@@ -15,7 +15,7 @@ import com.example.pomodorotimer.model.Task
 fun TaskItem(
     task: Task,
     onClick: () -> Unit,
-    onLongClick: () -> Unit = {}  // Default value provided
+    onLongClick: () -> Unit = {}  // 默认值为空操作
 ) {
     Column(
         modifier = Modifier

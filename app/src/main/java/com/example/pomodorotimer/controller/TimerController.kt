@@ -1,5 +1,6 @@
 package com.example.pomodorotimer.controller
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.pomodorotimer.model.Task
 import com.example.pomodorotimer.model.TimerModel
 import kotlinx.coroutines.*
@@ -9,8 +10,9 @@ import kotlinx.coroutines.flow.StateFlow
 class TimerController : ViewModel() {
     private val timerModel = TimerModel()
     private var timerJob: Job? = null
+    private val _currentTask = MutableStateFlow<Task?>(null)
+    val currentTask: StateFlow<Task?> = _currentTask
 
-    // 使用 StateFlow 来管理状态
     private val _timeLeft = MutableStateFlow(timerModel.timeLeft)
     val timeLeft: StateFlow<Int> get() = _timeLeft
 
@@ -20,13 +22,13 @@ class TimerController : ViewModel() {
     private val _isWorking = MutableStateFlow(timerModel.isWorkingState)
     val isWorking: StateFlow<Boolean> get() = _isWorking
 
-    var currentTask: Task? = null
+    private val _cycleInfo = MutableStateFlow(timerModel.getCurrentCycleInfo())
+    val cycleInfo: StateFlow<String> get() = _cycleInfo
 
-    // 启动计时器
+
     fun startTimer() {
         if (_isRunning.value) return
         _isRunning.value = true
-
         timerJob = CoroutineScope(Dispatchers.Main).launch {
             while (_timeLeft.value > 0 && _isRunning.value) {
                 delay(1000L)
@@ -38,34 +40,51 @@ class TimerController : ViewModel() {
         }
     }
 
-    // 暂停计时器
     fun pauseTimer() {
         _isRunning.value = false
         timerJob?.cancel()
     }
 
-    // 重置计时器
     fun resetTimer() {
         pauseTimer()
         timerModel.resetTimer()
         _timeLeft.value = timerModel.timeLeft
+        _cycleInfo.value = timerModel.getCurrentCycleInfo()
     }
 
-    // 切换工作与休息周期
-    fun toggleWorkRestCycle() {
-        timerModel.toggleWorkRestCycle()
-        _isWorking.value = timerModel.isWorkingState
+
+    fun updateWorkTime(newWorkTime: Int) {
+        timerModel.updateWorkTime(newWorkTime)
         _timeLeft.value = timerModel.timeLeft
+    }
+
+    fun setCurrentTask(task: Task) {
+        _currentTask.value = task
+        // 任务切换时记录上一个任务的完成情况
+        _currentTask.value?.let { previousTask ->
+            recordTaskProgress(previousTask)
+        }
     }
 
     private fun onTimerComplete() {
         _isRunning.value = false
-        toggleWorkRestCycle()  // 切换工作/休息状态
+        timerModel.toggleWorkRestCycle()
+        _isWorking.value = timerModel.isWorkingState
+        _timeLeft.value = timerModel.timeLeft
+        _cycleInfo.value = timerModel.getCurrentCycleInfo()
+
+        // 记录任务进度
+        if (_isWorking.value) {
+            _currentTask.value?.let { task ->
+                recordTaskProgress(task)
+            }
+        }
     }
 
-    // 更新工作时间
-    fun updateWorkTime(newWorkTime: Int) {
-        timerModel.updateWorkTime(newWorkTime)
-        _timeLeft.value = newWorkTime
+    private fun recordTaskProgress(task: Task) {
+        viewModelScope.launch(Dispatchers.IO) {
+            // 这里可以调用 TaskController 或直接访问数据层来记录进度
+            // 例如记录完成的番茄周期数、总时长等
+        }
     }
 }
