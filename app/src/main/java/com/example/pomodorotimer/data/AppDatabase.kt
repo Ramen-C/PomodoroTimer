@@ -1,3 +1,4 @@
+// AppDataBase.kt
 package com.example.pomodorotimer.data
 import android.content.Context
 import androidx.room.Database
@@ -19,5 +20,13 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java, "app_database"
                 ).build().also { instance = it }
             }
+
+        // 添加删除数据库的方法
+        fun deleteDatabase(context: Context) {
+            synchronized(this) {
+                context.deleteDatabase("app_database") // 删除数据库文件
+                instance = null // 确保实例被重置
+            }
+        }
     }
 }

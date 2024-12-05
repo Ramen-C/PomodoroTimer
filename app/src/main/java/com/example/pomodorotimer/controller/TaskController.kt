@@ -1,7 +1,9 @@
+// TaskController.kt
 package com.example.pomodorotimer.controller
 
 import com.example.pomodorotimer.model.Task
 import com.example.pomodorotimer.model.TaskModel
+import com.example.pomodorotimer.model.TaskTimeStat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,6 +51,23 @@ class TaskController(private val taskModel: TaskModel) {
         CoroutineScope(Dispatchers.Main).launch {
             val tasks = taskModel.getAllTasks() // 获取最新的任务列表
             onUpdateComplete(tasks) // 回调更新任务列表
+        }
+    }
+
+    // 新增：获取任务时间统计
+    fun getTaskTimeStats(onResult: (List<TaskTimeStat>) -> Unit) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val taskTimeStats = taskModel.getTaskTimeStats()
+            onResult(taskTimeStats) // 回调任务统计数据
+        }
+    }
+
+    // 新增：更新任务累计时间
+    fun updateTaskTime(task: Task, additionalTime: Long, onComplete: () -> Unit) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val updatedTask = task.copy(totalTimeSpent = task.totalTimeSpent + additionalTime)
+            taskModel.updateTask(updatedTask)
+            onComplete() // 操作完成后回调
         }
     }
 }

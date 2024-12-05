@@ -1,3 +1,4 @@
+// MainActivity.kt
 package com.example.pomodorotimer.ui
 
 import android.os.Bundle
@@ -106,7 +107,7 @@ fun PomodoroTimerApp(
                 )
             }
             composable("progress") {
-                ProgressScreen() // 进度统计界面
+                ProgressScreen(taskController = taskController) // 进度统计界面
             }
             composable("settings") {
                 SettingsScreen() // 设置界面

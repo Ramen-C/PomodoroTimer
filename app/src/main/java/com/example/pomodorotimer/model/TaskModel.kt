@@ -1,3 +1,4 @@
+// TaskModel.kt
 package com.example.pomodorotimer.model
 
 import android.database.Cursor
@@ -52,6 +53,21 @@ class TaskModel(private val taskDao: TaskDao) {
     suspend fun deleteTask(task: Task) {
         withContext(Dispatchers.IO) {
             taskDao.deleteTask(task)
+        }
+    }
+
+    // 新增：获取任务时间统计
+    suspend fun getTaskTimeStats(): List<TaskTimeStat> {
+        return withContext(Dispatchers.IO) {
+            val cursor: Cursor = taskDao.getTasksCursor() // 查询任务数据
+            val taskTimeStats = mutableListOf<TaskTimeStat>()
+            while (cursor.moveToNext()) {
+                val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                val totalTimeSpent = cursor.getLong(cursor.getColumnIndexOrThrow("totalTimeSpent"))
+                taskTimeStats.add(TaskTimeStat(name, totalTimeSpent))
+            }
+            cursor.close()
+            taskTimeStats
         }
     }
 }

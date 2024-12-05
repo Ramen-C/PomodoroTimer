@@ -1,9 +1,9 @@
 package com.example.pomodorotimer.model
 
 class TimerModel(
-    private var workTime: Int = 25 * 60,  // 25分钟工作时间
-    private val shortBreakTime: Int = 5 * 60,  // 5分钟短休息
-    private val longBreakTime: Int = 20 * 60   // 20分钟长休息
+    private var workTime: Int = 1 * 60,  // 25分钟工作时间
+    private val shortBreakTime: Int = 1 * 2,  // 5分钟短休息
+    private val longBreakTime: Int = 1 * 2   // 20分钟长休息
 ) {
     var timeLeft = workTime
     var isWorkingState = true

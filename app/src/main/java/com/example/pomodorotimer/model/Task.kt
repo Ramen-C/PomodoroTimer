@@ -1,3 +1,4 @@
+// Task.kt
 package com.example.pomodorotimer.model
 
 import android.content.ContentValues
@@ -9,7 +10,8 @@ import androidx.room.PrimaryKey
 data class Task(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,
-    val description: String = ""
+    val description: String = "",
+    val totalTimeSpent: Long = 0L
 ) {
     companion object {
         // 从 ContentValues 创建 Task 对象
@@ -17,6 +19,7 @@ data class Task(
             var id = 0L
             var name = ""
             var description = ""
+            var totalTimeSpent = 0L
             values?.let {
                 if (it.containsKey("id")) {
                     id = it.getAsLong("id")
@@ -27,8 +30,11 @@ data class Task(
                 if (it.containsKey("description")) {
                     description = it.getAsString("description")
                 }
+                if (it.containsKey("totalTimeSpent")) {
+                    totalTimeSpent = it.getAsLong("totalTimeSpent")
+                }
             }
-            return Task(id, name, description)
+            return Task(id, name, description, totalTimeSpent)
         }
 
         // 从 Cursor 创建 Task 对象
@@ -36,6 +42,9 @@ data class Task(
             val id = cursor.getLong(cursor.getColumnIndexOrThrow("id"))
             val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
             val description = cursor.getString(cursor.getColumnIndexOrThrow("description"))
+            val totalTimeSpent = cursor.getLong(
+                cursor.getColumnIndexOrThrow("totalTimeSpent")
+            )
             return Task(id, name, description)
         }
     }
