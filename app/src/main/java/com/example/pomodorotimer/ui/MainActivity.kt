@@ -35,13 +35,17 @@ class MainActivity : ComponentActivity() {
 
         // 获取 TaskDao
         val taskDao = database.taskDao()
+        val cycleDao = database.cycleDao()
 
         // 初始化 TaskModel 和 TaskController
-        val taskModel = TaskModel(taskDao)
+        val taskModel = TaskModel(taskDao,cycleDao)
         val taskController = TaskController(taskModel)
 
-        // 初始化 TimerController（确保有一个 TimerController）
-        val timerController = TimerController()
+        // 初始化 TimerController
+        val timerController = TimerController(taskController)
+
+        // 注意：删除数据库的操作通常不应在 onCreate 中执行，除非你运行报错...
+        AppDatabase.deleteDatabase(applicationContext)
 
         setContent {
             PomodoroTimerApp(
@@ -65,7 +69,7 @@ fun PomodoroTimerApp(
             TopAppBar(
                 title = { Text("Pomodoro Timer") },
                 actions = {
-                    IconButton(onClick = { /* 打开设置页面 */ }) {
+                    IconButton(onClick = { navController.navigate("settings") }) {
                         Icon(Icons.Default.Settings, contentDescription = "Settings")
                     }
                 }
@@ -76,19 +80,37 @@ fun PomodoroTimerApp(
                 NavigationBarItem(
                     icon = { Icon(Icons.Outlined.Home, contentDescription = "Timer") },
                     selected = navController.currentBackStackEntry?.destination?.route == "timer",
-                    onClick = { navController.navigate("timer") },
+                    onClick = {
+                        if (navController.currentBackStackEntry?.destination?.route != "timer") {
+                            navController.navigate("timer") {
+                                popUpTo("timer") { inclusive = true }
+                            }
+                        }
+                    },
                     label = { Text("Timer") }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Outlined.Info, contentDescription = "Progress") },
                     selected = navController.currentBackStackEntry?.destination?.route == "progress",
-                    onClick = { navController.navigate("progress") },
+                    onClick = {
+                        if (navController.currentBackStackEntry?.destination?.route != "progress") {
+                            navController.navigate("progress") {
+                                popUpTo("progress") { inclusive = true }
+                            }
+                        }
+                    },
                     label = { Text("Progress") }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Outlined.Settings, contentDescription = "Settings") },
                     selected = navController.currentBackStackEntry?.destination?.route == "settings",
-                    onClick = { navController.navigate("settings") },
+                    onClick = {
+                        if (navController.currentBackStackEntry?.destination?.route != "settings") {
+                            navController.navigate("settings") {
+                                popUpTo("settings") { inclusive = true }
+                            }
+                        }
+                    },
                     label = { Text("Settings") }
                 )
             }
@@ -107,10 +129,15 @@ fun PomodoroTimerApp(
                 )
             }
             composable("progress") {
-                ProgressScreen(taskController = taskController) // 进度统计界面
+                ProgressScreen(
+                    taskController = taskController,
+                    timerController = timerController
+                )
             }
             composable("settings") {
-                SettingsScreen() // 设置界面
+                SettingsScreen(
+                    timerController = timerController
+                )
             }
         }
     }

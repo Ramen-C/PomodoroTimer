@@ -2,36 +2,25 @@
 package com.example.pomodorotimer.model
 
 import android.database.Cursor
+import com.example.pomodorotimer.data.CycleDao
 import com.example.pomodorotimer.data.TaskDao
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
-class TaskModel(private val taskDao: TaskDao) {
+class TaskModel(private val taskDao: TaskDao, private val cycleDao: CycleDao) {
 
-    // 获取所有任务，直接返回Cursor数据（避免使用LiveData）
+    // 获取所有任务
     suspend fun getAllTasks(): List<Task> {
         return withContext(Dispatchers.IO) {
             val cursor: Cursor = taskDao.getTasksCursor()
             val tasks = mutableListOf<Task>()
             while (cursor.moveToNext()) {
-                val task = Task.fromCursor(cursor)  // 使用 fromCursor 方法
+                val task = Task.fromCursor(cursor)
                 tasks.add(task)
             }
             cursor.close()
             tasks
-        }
-    }
-
-    // 获取单个任务
-    suspend fun getTaskById(id: Long): Task? {
-        return withContext(Dispatchers.IO) {
-            val cursor: Cursor = taskDao.getTaskByIdCursor(id)
-            var task: Task? = null
-            if (cursor.moveToNext()) {
-                task = Task.fromCursor(cursor)  // 使用 fromCursor 方法
-            }
-            cursor.close()
-            task
         }
     }
 
@@ -56,18 +45,50 @@ class TaskModel(private val taskDao: TaskDao) {
         }
     }
 
-    // 新增：获取任务时间统计
+    // 获取任务时间统计
     suspend fun getTaskTimeStats(): List<TaskTimeStat> {
         return withContext(Dispatchers.IO) {
-            val cursor: Cursor = taskDao.getTasksCursor() // 查询任务数据
-            val taskTimeStats = mutableListOf<TaskTimeStat>()
-            while (cursor.moveToNext()) {
-                val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
-                val totalTimeSpent = cursor.getLong(cursor.getColumnIndexOrThrow("totalTimeSpent"))
-                taskTimeStats.add(TaskTimeStat(name, totalTimeSpent))
-            }
-            cursor.close()
-            taskTimeStats
+            taskDao.getTaskTimeStats().value ?: emptyList()
         }
+    }
+
+    // 插入周期
+    suspend fun insertCycle(cycle: Cycle) {
+        withContext(Dispatchers.IO) {
+            cycleDao.insertCycle(cycle)
+        }
+    }
+
+    // 获取每日番茄周期数
+    suspend fun getCyclesPerDay(): List<CycleCount> {
+        return withContext(Dispatchers.IO) {
+            cycleDao.getCyclesPerDay()
+        }
+    }
+
+    // 获取番茄周期完成趋势
+    suspend fun getCyclesTrend(): List<CycleCount> {
+        return withContext(Dispatchers.IO) {
+            cycleDao.getCyclesTrend()
+        }
+    }
+
+    // 获取工作时间分布
+    fun getWorkTimeDistribution(): Map<String, Map<String, Int>> {
+        // 实现工作时间分布的统计逻辑
+        return emptyMap()
+    }
+
+    // 使用Flow的统计数据获取方法
+    fun getTaskTimeStatsFlow(): Flow<List<TaskTimeStat>> {
+        return taskDao.getTaskTimeStatsFlow()
+    }
+
+    fun getCyclesPerDayFlow(): Flow<List<CycleCount>> {
+        return cycleDao.getCyclesPerDayFlow()
+    }
+
+    fun getCyclesTrendFlow(): Flow<List<CycleCount>> {
+        return cycleDao.getCyclesTrendFlow()
     }
 }

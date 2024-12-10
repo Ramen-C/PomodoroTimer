@@ -1,4 +1,4 @@
-// TaskActivity.kt
+// ProgressActivity.kt
 package com.example.pomodorotimer.ui
 
 import android.os.Bundle
@@ -6,13 +6,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.ExperimentalMaterial3Api
 import com.example.pomodorotimer.controller.TaskController
+import com.example.pomodorotimer.controller.TimerController
 import com.example.pomodorotimer.data.AppDatabase
 import com.example.pomodorotimer.model.TaskModel
 import com.example.pomodorotimer.theme.PomodoroTimerTheme
 
+// ProgressActivity.kt
 @ExperimentalMaterial3Api
-class TaskActivity : ComponentActivity() {
+class ProgressActivity : ComponentActivity() {
     private lateinit var taskController: TaskController
+    private lateinit var timerController: TimerController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,14 +24,11 @@ class TaskActivity : ComponentActivity() {
         val cycleDao = AppDatabase.getDatabase(applicationContext).cycleDao()
         val taskModel = TaskModel(taskDao, cycleDao)
         taskController = TaskController(taskModel)
+        timerController = TimerController(taskController)
 
         setContent {
             PomodoroTimerTheme {
-                // 将 TaskController 传递到 TaskScreen，并处理任务选择
-                TaskScreen(taskController, onTaskSelected = {
-                    // 处理任务选择，返回 MainActivity 或其他操作
-                    finish() // 这里简单地关闭 Activity，实际应用中可传递数据
-                })
+                ProgressScreen(taskController,timerController)
             }
         }
     }

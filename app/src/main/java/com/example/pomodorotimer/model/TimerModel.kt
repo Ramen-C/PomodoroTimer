@@ -1,13 +1,13 @@
 package com.example.pomodorotimer.model
 
 class TimerModel(
-    private var workTime: Int = 1 * 60,  // 25分钟工作时间
-    private val shortBreakTime: Int = 1 * 2,  // 5分钟短休息
-    private val longBreakTime: Int = 1 * 2   // 20分钟长休息
+    private var workTime: Int = 25 * 60, // 默认25分钟工作时间（秒）
+    private var shortBreakTime: Int = 5 * 60, // 默认5分钟短休息（秒）
+    private var longBreakTime: Int = 20 * 60 // 默认20分钟长休息（秒）
 ) {
     var timeLeft = workTime
     var isWorkingState = true
-    var cyclesCompleted = 0
+    private var cyclesCompleted = 0
     private var shortBreakCount = 0
 
     fun resetTimer() {
@@ -37,12 +37,35 @@ class TimerModel(
         }
     }
 
-    fun updateWorkTime(newWorkTime: Int) {
-        workTime = newWorkTime
+    // 更新工作时间（分钟）
+    fun updateWorkTime(newWorkTimeInMinutes: Int) {
+        workTime = newWorkTimeInMinutes * 60
         if (isWorkingState) {
             timeLeft = workTime
         }
     }
+
+    // 更新短休息时间（分钟）
+    fun updateShortBreakTime(newShortBreakTimeInMinutes: Int) {
+        shortBreakTime = newShortBreakTimeInMinutes * 60
+        if (!isWorkingState && shortBreakCount < 3) {
+            // 如果当前正处于短休息中，及时更新时间
+            timeLeft = shortBreakTime
+        }
+    }
+
+    // 更新长休息时间（分钟）
+    fun updateLongBreakTime(newLongBreakTimeInMinutes: Int) {
+        longBreakTime = newLongBreakTimeInMinutes * 60
+        if (!isWorkingState && shortBreakCount == 3) {
+            // 如果当前正处于长休息中，及时更新时间
+            timeLeft = longBreakTime
+        }
+    }
+
+    fun getCurrentWorkTime(): Int = workTime
+    fun getCurrentShortBreakTime(): Int = shortBreakTime
+    fun getCurrentLongBreakTime(): Int = longBreakTime
 
     // 获取当前状态信息
     fun getCurrentCycleInfo(): String {

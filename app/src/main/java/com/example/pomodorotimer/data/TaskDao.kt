@@ -1,4 +1,4 @@
-// 文件：TaskDao.kt
+// TaskDao.kt
 package com.example.pomodorotimer.data
 
 import android.database.Cursor
@@ -6,9 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.pomodorotimer.model.Task
 import com.example.pomodorotimer.model.TaskTimeStat
+import kotlinx.coroutines.flow.Flow
 
 @Dao
-
 interface TaskDao {
     @Query("SELECT * FROM tasks")
     fun getAllTasks(): LiveData<List<Task>>
@@ -22,6 +22,9 @@ interface TaskDao {
     // 获取所有任务及其累计时间
     @Query("SELECT name, totalTimeSpent FROM tasks")
     fun getTaskTimeStats(): LiveData<List<TaskTimeStat>>
+
+    @Query("SELECT name, totalTimeSpent FROM tasks")
+    fun getTaskTimeStatsFlow(): Flow<List<TaskTimeStat>>
 
     @Insert
     suspend fun insertTask(task: Task)

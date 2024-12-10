@@ -11,7 +11,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,16 +35,6 @@ fun TimerScreen(
     val currentTask by timerController.currentTask.collectAsState()
     var showTaskDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(currentTask) {
-        if (currentTask == null) {
-            taskController.getAllTasks { tasks ->
-                // 如果有默认任务（如"学习"），则自动设置
-                tasks.firstOrNull { it.name == "学习" }?.let {
-                    timerController.setCurrentTask(it)
-                }
-            }
-        }
-    }
 
     Column(
         modifier = Modifier

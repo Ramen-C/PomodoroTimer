@@ -1,14 +1,17 @@
-// AppDataBase.kt
+// AppDatabase.kt
 package com.example.pomodorotimer.data
+
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.pomodorotimer.model.Cycle
 import com.example.pomodorotimer.model.Task
 
-@Database(entities = [Task::class], version = 1)
+@Database(entities = [Task::class, Cycle::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun taskDao(): TaskDao
+    abstract fun cycleDao(): CycleDao
 
     companion object {
         @Volatile private var instance: AppDatabase? = null
@@ -21,7 +24,6 @@ abstract class AppDatabase : RoomDatabase() {
                 ).build().also { instance = it }
             }
 
-        // 添加删除数据库的方法
         fun deleteDatabase(context: Context) {
             synchronized(this) {
                 context.deleteDatabase("app_database") // 删除数据库文件

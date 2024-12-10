@@ -1,4 +1,3 @@
-// Task.kt
 package com.example.pomodorotimer.model
 
 import android.content.ContentValues
@@ -42,10 +41,9 @@ data class Task(
             val id = cursor.getLong(cursor.getColumnIndexOrThrow("id"))
             val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
             val description = cursor.getString(cursor.getColumnIndexOrThrow("description"))
-            val totalTimeSpent = cursor.getLong(
-                cursor.getColumnIndexOrThrow("totalTimeSpent")
-            )
-            return Task(id, name, description)
+            val totalTimeSpent = cursor.getLong(cursor.getColumnIndexOrThrow("totalTimeSpent"))
+            // 此处将 totalTimeSpent 正确传入 Task 构造函数
+            return Task(id, name, description, totalTimeSpent)
         }
     }
 }

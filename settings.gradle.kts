@@ -1,3 +1,4 @@
+// settings.gradle
 pluginManagement {
     repositories {
         google {
@@ -16,6 +17,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url = uri("https://jitpack.io") } // 正确使用 uri() 函数
     }
 }
 

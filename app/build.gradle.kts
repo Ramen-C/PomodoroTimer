@@ -67,7 +67,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.firebase.perf.ktx)
 
-
     // Room Compiler
     ksp(libs.androidx.room.compiler) // 添加 Room 编译器依赖项
 
@@ -80,4 +79,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(libs.mpandroidchart)
 }

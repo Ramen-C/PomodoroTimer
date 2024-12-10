@@ -95,6 +95,7 @@ class TaskContentProvider : ContentProvider() {
         }
     }
 
+
     override fun update(
         uri: Uri,
         values: ContentValues?,

@@ -5,3 +5,4 @@ plugins {
     id("com.android.library") version "8.1.4" apply false
     id("com.google.devtools.ksp") version "1.9.22-1.0.16" apply false
 }
+

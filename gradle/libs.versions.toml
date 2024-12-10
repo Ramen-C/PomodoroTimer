@@ -1,5 +1,6 @@
 [versions]
 agp = "8.6.0"
+composeCharts = "0.1.0" # 更新为实际存在的版本
 kotlin = "1.9.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -16,10 +17,13 @@ playServicesGcm = "17.0.0"
 runtimeLivedata = "1.7.5"
 navigationCompose = "2.8.4"
 firebasePerfKtx = "21.0.2"
+mpAndroidChart = "v3.1.0"
 
 [libraries]
+mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpAndroidChart" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+compose-charts = { module = "com.github.diogobernardino:compose-charts", version.ref = "composeCharts" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -44,4 +48,3 @@ firebase-perf-ktx = { group = "com.google.firebase", name = "firebase-perf-ktx",
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-

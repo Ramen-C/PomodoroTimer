@@ -1,14 +1,16 @@
 // TimerController.kt
 package com.example.pomodorotimer.controller
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pomodorotimer.model.Task
 import com.example.pomodorotimer.model.TimerModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
-class TimerController : ViewModel() {
+class TimerController(private val taskController: TaskController) : ViewModel() {
     private val timerModel = TimerModel()
     private var timerJob: Job? = null
     private val _currentTask = MutableStateFlow<Task?>(null)
@@ -30,9 +32,9 @@ class TimerController : ViewModel() {
     fun startTimer() {
         if (_isRunning.value) return
         _isRunning.value = true
-        timerJob = CoroutineScope(Dispatchers.Main).launch {
+        timerJob = viewModelScope.launch {
             while (_timeLeft.value > 0 && _isRunning.value) {
-                delay(1000L)
+                kotlinx.coroutines.delay(1000L)
                 _timeLeft.value -= 1
             }
             if (_timeLeft.value == 0) {
@@ -83,9 +85,36 @@ class TimerController : ViewModel() {
     }
 
     private fun recordTaskProgress(task: Task) {
-        viewModelScope.launch(Dispatchers.IO) {
-            // 这里可以调用 TaskController 或直接访问数据层来记录进度
-            // 例如记录完成的番茄周期数、总时长等
+        viewModelScope.launch {
+            // 更新任务的总时间
+            taskController.updateTaskTime(task, timerModel.getCurrentWorkTime().toLong()) {
+                // 更新成功后，记录周期
+                taskController.recordCycle(task) {
+                    // 进一步的操作（如果需要）
+                }
+            }
         }
+    }
+
+    // 添加刷新时间的方法
+    fun refreshTime() {
+        _timeLeft.value = timerModel.timeLeft
+        _cycleInfo.value = timerModel.getCurrentCycleInfo()
+    }
+
+    // 新增方法：获取当前工作和休息时间（分钟）
+    fun getCurrentWorkTimeInMinutes(): Int = timerModel.getCurrentWorkTime() / 60
+    fun getCurrentShortBreakTimeInMinutes(): Int = timerModel.getCurrentShortBreakTime() / 60
+    fun getCurrentLongBreakTimeInMinutes(): Int = timerModel.getCurrentLongBreakTime() / 60
+
+    // 新增方法：更新休息时间（分钟）
+    fun updateShortBreakTime(newShortBreakTimeInMinutes: Int) {
+        timerModel.updateShortBreakTime(newShortBreakTimeInMinutes)
+        _timeLeft.value = timerModel.timeLeft
+    }
+
+    fun updateLongBreakTime(newLongBreakTimeInMinutes: Int) {
+        timerModel.updateLongBreakTime(newLongBreakTimeInMinutes)
+        _timeLeft.value = timerModel.timeLeft
     }
 }
