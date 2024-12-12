@@ -1,3 +1,4 @@
+// SettingScreen.kt
 package com.example.pomodorotimer.ui
 
 import android.annotation.SuppressLint

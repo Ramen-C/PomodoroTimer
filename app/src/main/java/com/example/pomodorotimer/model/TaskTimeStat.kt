@@ -1,3 +1,4 @@
+// TaskTimeStat.kt
 package com.example.pomodorotimer.model
 
 data class TaskTimeStat(

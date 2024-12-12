@@ -1,3 +1,4 @@
+// TimerModel.kt
 package com.example.pomodorotimer.model
 
 class TimerModel(
@@ -12,6 +13,8 @@ class TimerModel(
 
     fun resetTimer() {
         timeLeft = if (isWorkingState) workTime else getCurrentBreakTime()
+        // 重置工作轮完成状态
+        shortBreakCount = if (isWorkingState) shortBreakCount else shortBreakCount
     }
 
     private fun getCurrentBreakTime(): Int {
@@ -57,7 +60,7 @@ class TimerModel(
     // 更新长休息时间（分钟）
     fun updateLongBreakTime(newLongBreakTimeInMinutes: Int) {
         longBreakTime = newLongBreakTimeInMinutes * 60
-        if (!isWorkingState && shortBreakCount == 3) {
+        if (!isWorkingState && shortBreakCount == 0) {
             // 如果当前正处于长休息中，及时更新时间
             timeLeft = longBreakTime
         }
@@ -72,7 +75,12 @@ class TimerModel(
         return if (isWorkingState) {
             "工作中 (${shortBreakCount}/3)"
         } else {
-            if (shortBreakCount == 3) "长休息" else "短休息 (${shortBreakCount}/3)"
+            if (shortBreakCount == 0) "长休息" else "短休息 (${shortBreakCount}/3)"
         }
+    }
+
+    // 判断当前是否是长休息
+    fun isLongBreak(): Boolean {
+        return !isWorkingState && timeLeft == longBreakTime
     }
 }

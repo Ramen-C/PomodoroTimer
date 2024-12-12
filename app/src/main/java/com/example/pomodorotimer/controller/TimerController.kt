@@ -28,6 +28,17 @@ class TimerController(private val taskController: TaskController) : ViewModel() 
     private val _cycleInfo = MutableStateFlow(timerModel.getCurrentCycleInfo())
     val cycleInfo: StateFlow<String> get() = _cycleInfo
 
+    // 自动/手动模式状态
+    private val _isAutoMode = MutableStateFlow(false)
+    val isAutoMode: StateFlow<Boolean> get() = _isAutoMode
+
+    // 工作轮完成状态
+    private val _workRoundCompleted = MutableStateFlow(false)
+    val workRoundCompleted: StateFlow<Boolean> get() = _workRoundCompleted
+
+    fun toggleAutoMode() {
+        _isAutoMode.value = !_isAutoMode.value
+    }
 
     fun startTimer() {
         if (_isRunning.value) return
@@ -53,8 +64,8 @@ class TimerController(private val taskController: TaskController) : ViewModel() 
         timerModel.resetTimer()
         _timeLeft.value = timerModel.timeLeft
         _cycleInfo.value = timerModel.getCurrentCycleInfo()
+        _workRoundCompleted.value = false // 重置工作轮完成状态
     }
-
 
     fun updateWorkTime(newWorkTime: Int) {
         timerModel.updateWorkTime(newWorkTime)
@@ -82,6 +93,19 @@ class TimerController(private val taskController: TaskController) : ViewModel() 
                 recordTaskProgress(task)
             }
         }
+
+        // 检查是否完成了一轮工作
+        if (timerModel.isLongBreak()) {
+            // 长休息结束，完成一轮工作，停止计时
+            _workRoundCompleted.value = true
+        } else {
+            if (_isAutoMode.value) {
+                // 自动模式下完成后直接进入下一个周期的计时
+                startTimer()
+            } else {
+                // 手动模式下在计时完成后等待用户手动开始，不调用 startTimer()，让用户手动点击开始
+            }
+        }
     }
 
     private fun recordTaskProgress(task: Task) {
@@ -96,18 +120,15 @@ class TimerController(private val taskController: TaskController) : ViewModel() 
         }
     }
 
-    // 添加刷新时间的方法
     fun refreshTime() {
         _timeLeft.value = timerModel.timeLeft
         _cycleInfo.value = timerModel.getCurrentCycleInfo()
     }
 
-    // 新增方法：获取当前工作和休息时间（分钟）
     fun getCurrentWorkTimeInMinutes(): Int = timerModel.getCurrentWorkTime() / 60
     fun getCurrentShortBreakTimeInMinutes(): Int = timerModel.getCurrentShortBreakTime() / 60
     fun getCurrentLongBreakTimeInMinutes(): Int = timerModel.getCurrentLongBreakTime() / 60
 
-    // 新增方法：更新休息时间（分钟）
     fun updateShortBreakTime(newShortBreakTimeInMinutes: Int) {
         timerModel.updateShortBreakTime(newShortBreakTimeInMinutes)
         _timeLeft.value = timerModel.timeLeft
@@ -116,5 +137,10 @@ class TimerController(private val taskController: TaskController) : ViewModel() 
     fun updateLongBreakTime(newLongBreakTimeInMinutes: Int) {
         timerModel.updateLongBreakTime(newLongBreakTimeInMinutes)
         _timeLeft.value = timerModel.timeLeft
+    }
+
+    // 重置工作轮完成状态
+    fun resetWorkRoundCompleted() {
+        _workRoundCompleted.value = false
     }
 }
