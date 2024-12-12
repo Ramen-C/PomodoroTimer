@@ -3,6 +3,7 @@ package com.example.pomodorotimer.controller
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pomodorotimer.model.CycleType
 import com.example.pomodorotimer.model.Task
 import com.example.pomodorotimer.model.TimerModel
 import kotlinx.coroutines.Job
@@ -83,6 +84,11 @@ class TimerController(private val taskController: TaskController) : ViewModel() 
 
     private fun onTimerComplete() {
         _isRunning.value = false
+
+        // 在切换周期之前，获取刚完成的周期类型
+        val completedCycleType = timerModel.getCurrentCycleType()
+
+        // 切换周期
         timerModel.toggleWorkRestCycle()
         _isWorking.value = timerModel.isWorkingState
         _timeLeft.value = timerModel.timeLeft
@@ -96,12 +102,12 @@ class TimerController(private val taskController: TaskController) : ViewModel() 
         }
 
         when {
-            _isAutoMode.value && timerModel.isLongBreak() -> {
-                // 自动模式下，完成一轮工作（长休息结束）
+            // 自动模式下，完成一轮工作（长休息结束）
+            _isAutoMode.value && completedCycleType == CycleType.LongBreak -> {
                 _promptShow.value = true
             }
+            // 手动模式下，任何阶段结束后都弹出提示
             !_isAutoMode.value -> {
-                // 手动模式下，任何阶段结束后都弹出提示
                 _promptShow.value = true
             }
             else -> {
@@ -145,5 +151,10 @@ class TimerController(private val taskController: TaskController) : ViewModel() 
     // 重置提示状态
     fun resetPromptShow() {
         _promptShow.value = false
+    }
+
+    // 新增方法：判断当前是否是长休息
+    fun isCurrentLongBreak(): Boolean {
+        return timerModel.isLongBreak()
     }
 }

@@ -25,11 +25,18 @@ fun TimerScreen(
 
     var showTaskDialog by remember { mutableStateOf(false) }
     var showPromptDialog by remember { mutableStateOf(false) }
+    var promptMessage by remember { mutableStateOf("") }
 
     // 监听 promptShow 状态
     LaunchedEffect(promptShow) {
         if (promptShow) {
             showPromptDialog = true
+            // 设置提示消息
+            promptMessage = if (isAutoMode && timerController.isCurrentLongBreak()) {
+                "您已完成一轮工作！"
+            } else {
+                "当前阶段已完成！"
+            }
         }
     }
 
@@ -108,7 +115,7 @@ fun TimerScreen(
             }
         }
 
-        // 工作轮完成提示对话框
+        // 提示对话框
         if (showPromptDialog) {
             AlertDialog(
                 onDismissRequest = {
@@ -116,15 +123,7 @@ fun TimerScreen(
                     timerController.resetPromptShow()
                 },
                 title = { Text(text = "提示") },
-                text = {
-                    Text(
-                        if (isAutoMode && timerController.timerModel.isLongBreak()) {
-                            "您已完成一轮工作！"
-                        } else {
-                            "当前阶段已完成！"
-                        }
-                    )
-                },
+                text = { Text(promptMessage) },
                 confirmButton = {
                     TextButton(onClick = {
                         showPromptDialog = false

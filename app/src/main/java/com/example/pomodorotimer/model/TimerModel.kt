@@ -1,6 +1,12 @@
 // TimerModel.kt
 package com.example.pomodorotimer.model
 
+enum class CycleType {
+    Work,
+    ShortBreak,
+    LongBreak
+}
+
 class TimerModel(
     private var workTime: Int = 25 * 60, // 默认25分钟工作时间（秒）
     private var shortBreakTime: Int = 5 * 60, // 默认5分钟短休息（秒）
@@ -13,8 +19,10 @@ class TimerModel(
 
     fun resetTimer() {
         timeLeft = if (isWorkingState) workTime else getCurrentBreakTime()
-        // 重置工作轮完成状态
-        shortBreakCount = if (isWorkingState) shortBreakCount else shortBreakCount
+        // 重置短休息计数
+        if (!isWorkingState && shortBreakCount == 0) {
+            shortBreakCount = 0
+        }
     }
 
     private fun getCurrentBreakTime(): Int {
@@ -82,5 +90,14 @@ class TimerModel(
     // 判断当前是否是长休息
     fun isLongBreak(): Boolean {
         return !isWorkingState && timeLeft == longBreakTime
+    }
+
+    // 获取当前周期类型
+    fun getCurrentCycleType(): CycleType {
+        return if (isWorkingState) {
+            CycleType.Work
+        } else {
+            if (shortBreakCount == 0) CycleType.LongBreak else CycleType.ShortBreak
+        }
     }
 }
