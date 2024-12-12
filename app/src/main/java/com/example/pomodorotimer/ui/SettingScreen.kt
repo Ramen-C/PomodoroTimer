@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.pomodorotimer.controller.TimerController
+
 @SuppressLint("DefaultLocale")
 @Composable
 fun SettingsScreen(timerController: TimerController) {
@@ -32,6 +33,7 @@ fun SettingsScreen(timerController: TimerController) {
             text = "设置",
             style = MaterialTheme.typography.headlineMedium
         )
+
         // 工作时间设置
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -52,17 +54,9 @@ fun SettingsScreen(timerController: TimerController) {
                     text = "$workTime 分钟",
                     style = MaterialTheme.typography.bodyMedium
                 )
-                Button(
-                    onClick = {
-                        timerController.updateWorkTime(workTime)
-                        showConfirmation = true
-                    },
-                    modifier = Modifier.padding(top = 8.dp)
-                ) {
-                    Text("保存工作时间")
-                }
             }
         }
+
         // 短休息时间设置
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -83,17 +77,9 @@ fun SettingsScreen(timerController: TimerController) {
                     text = "$shortBreakTime 分钟",
                     style = MaterialTheme.typography.bodyMedium
                 )
-                Button(
-                    onClick = {
-                        timerController.updateShortBreakTime(shortBreakTime)
-                        showConfirmation = true
-                    },
-                    modifier = Modifier.padding(top = 8.dp)
-                ) {
-                    Text("保存短休息时间")
-                }
             }
         }
+
         // 长休息时间设置
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -114,17 +100,25 @@ fun SettingsScreen(timerController: TimerController) {
                     text = "$longBreakTime 分钟",
                     style = MaterialTheme.typography.bodyMedium
                 )
-                Button(
-                    onClick = {
-                        timerController.updateLongBreakTime(longBreakTime)
-                        showConfirmation = true
-                    },
-                    modifier = Modifier.padding(top = 8.dp)
-                ) {
-                    Text("保存长休息时间")
-                }
             }
         }
+
+        // 统一的保存设置按钮
+        Button(
+            onClick = {
+                timerController.updateWorkTime(workTime)
+                timerController.updateShortBreakTime(shortBreakTime)
+                timerController.updateLongBreakTime(longBreakTime)
+                showConfirmation = true
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Text("保存设置")
+        }
+
         // 在确认弹窗的确定按钮中，调用refreshTime
         if (showConfirmation) {
             AlertDialog(
