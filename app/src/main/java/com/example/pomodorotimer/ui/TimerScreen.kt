@@ -21,15 +21,15 @@ fun TimerScreen(
     val cycleInfo by timerController.cycleInfo.collectAsState()
     val currentTask by timerController.currentTask.collectAsState()
     val isAutoMode by timerController.isAutoMode.collectAsState()
-    val workRoundCompleted by timerController.workRoundCompleted.collectAsState()
+    val promptShow by timerController.promptShow.collectAsState()
 
     var showTaskDialog by remember { mutableStateOf(false) }
-    var showWorkRoundDialog by remember { mutableStateOf(false) }
+    var showPromptDialog by remember { mutableStateOf(false) }
 
-    // 监听 workRoundCompleted 状态
-    LaunchedEffect(workRoundCompleted) {
-        if (workRoundCompleted) {
-            showWorkRoundDialog = true
+    // 监听 promptShow 状态
+    LaunchedEffect(promptShow) {
+        if (promptShow) {
+            showPromptDialog = true
         }
     }
 
@@ -122,18 +122,26 @@ fun TimerScreen(
         }
 
         // 工作轮完成提示对话框
-        if (showWorkRoundDialog) {
+        if (showPromptDialog) {
             AlertDialog(
                 onDismissRequest = {
-                    showWorkRoundDialog = false
-                    timerController.resetWorkRoundCompleted()
+                    showPromptDialog = false
+                    timerController.resetPromptShow()
                 },
-                title = { Text(text = "恭喜！") },
-                text = { Text("您已完成一轮工作！") },
+                title = { Text(text = "提示") },
+                text = {
+                    Text(
+                        if (isAutoMode && timerController.timerModel.isLongBreak()) {
+                            "您已完成一轮工作！"
+                        } else {
+                            "当前阶段已完成！"
+                        }
+                    )
+                },
                 confirmButton = {
                     TextButton(onClick = {
-                        showWorkRoundDialog = false
-                        timerController.resetWorkRoundCompleted()
+                        showPromptDialog = false
+                        timerController.resetPromptShow()
                     }) {
                         Text("确定")
                     }

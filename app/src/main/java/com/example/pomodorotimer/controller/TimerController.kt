@@ -11,8 +11,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class TimerController(private val taskController: TaskController) : ViewModel() {
-    private val timerModel = TimerModel()
+    val timerModel = TimerModel()
     private var timerJob: Job? = null
+
     private val _currentTask = MutableStateFlow<Task?>(null)
     val currentTask: StateFlow<Task?> = _currentTask
 
@@ -32,9 +33,9 @@ class TimerController(private val taskController: TaskController) : ViewModel() 
     private val _isAutoMode = MutableStateFlow(false)
     val isAutoMode: StateFlow<Boolean> get() = _isAutoMode
 
-    // 工作轮完成状态
-    private val _workRoundCompleted = MutableStateFlow(false)
-    val workRoundCompleted: StateFlow<Boolean> get() = _workRoundCompleted
+    // 提示显示状态
+    private val _promptShow = MutableStateFlow(false)
+    val promptShow: StateFlow<Boolean> get() = _promptShow
 
     fun toggleAutoMode() {
         _isAutoMode.value = !_isAutoMode.value
@@ -64,7 +65,7 @@ class TimerController(private val taskController: TaskController) : ViewModel() 
         timerModel.resetTimer()
         _timeLeft.value = timerModel.timeLeft
         _cycleInfo.value = timerModel.getCurrentCycleInfo()
-        _workRoundCompleted.value = false // 重置工作轮完成状态
+        _promptShow.value = false // 重置提示状态
     }
 
     fun updateWorkTime(newWorkTime: Int) {
@@ -94,16 +95,18 @@ class TimerController(private val taskController: TaskController) : ViewModel() 
             }
         }
 
-        // 检查是否完成了一轮工作
-        if (timerModel.isLongBreak()) {
-            // 长休息结束，完成一轮工作，停止计时
-            _workRoundCompleted.value = true
-        } else {
-            if (_isAutoMode.value) {
-                // 自动模式下完成后直接进入下一个周期的计时
+        when {
+            _isAutoMode.value && timerModel.isLongBreak() -> {
+                // 自动模式下，完成一轮工作（长休息结束）
+                _promptShow.value = true
+            }
+            !_isAutoMode.value -> {
+                // 手动模式下，任何阶段结束后都弹出提示
+                _promptShow.value = true
+            }
+            else -> {
+                // 自动模式下，非长休息阶段，继续下一个周期
                 startTimer()
-            } else {
-                // 手动模式下在计时完成后等待用户手动开始，不调用 startTimer()，让用户手动点击开始
             }
         }
     }
@@ -139,8 +142,8 @@ class TimerController(private val taskController: TaskController) : ViewModel() 
         _timeLeft.value = timerModel.timeLeft
     }
 
-    // 重置工作轮完成状态
-    fun resetWorkRoundCompleted() {
-        _workRoundCompleted.value = false
+    // 重置提示状态
+    fun resetPromptShow() {
+        _promptShow.value = false
     }
 }
