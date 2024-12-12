@@ -81,19 +81,6 @@ fun TimerScreen(
         )
 
         // 自动/手动模式切换按钮
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(
-                onClick = { timerController.toggleAutoMode() },
-                modifier = Modifier.padding(end = 16.dp)
-            ) {
-                Text(if (isAutoMode) "自动模式" else "手动模式")
-            }
-        }
 
         // 控制按钮：开始/暂停 和 重置
         Row(

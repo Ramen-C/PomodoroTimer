@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.pomodorotimer.controller.TimerController
@@ -22,86 +23,45 @@ fun SettingsScreen(timerController: TimerController) {
         mutableIntStateOf(timerController.getCurrentLongBreakTimeInMinutes())
     }
     var showConfirmation by remember { mutableStateOf(false) }
+    var showModeSwitchMessage by remember { mutableStateOf<String?>(null) }
+    val isAutoMode by timerController.isAutoMode.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = "设置",
             style = MaterialTheme.typography.headlineMedium
         )
 
-        // 工作时间设置
-        Card(
+        // 自动/手动切换按钮
+        Row(
             modifier = Modifier.fillMaxWidth(),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            horizontalArrangement = Arrangement.Center
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = "工作时间（分钟）",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Slider(
-                    value = workTime.toFloat(),
-                    onValueChange = { workTime = it.toInt() },
-                    valueRange = 1f..60f, // 1分钟到60分钟
-                    steps = 59
-                )
-                Text(
-                    text = "$workTime 分钟",
-                    style = MaterialTheme.typography.bodyMedium
-                )
+            Button(
+                onClick = {
+                    timerController.toggleAutoMode()
+                    showModeSwitchMessage = if (isAutoMode) "当前模式：手动模式" else "当前模式：自动模式"
+                },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(if (isAutoMode) "切换为手动模式" else "切换为自动模式")
             }
         }
+
+        // 工作时间设置
+        TimeSettingCard("工作时间（分钟）", workTime, 1f..60f, 59) { workTime = it }
 
         // 短休息时间设置
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = "短休息时间（分钟）",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Slider(
-                    value = shortBreakTime.toFloat(),
-                    onValueChange = { shortBreakTime = it.toInt() },
-                    valueRange = 1f..30f, // 1分钟到30分钟
-                    steps = 29
-                )
-                Text(
-                    text = "$shortBreakTime 分钟",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-        }
+        TimeSettingCard("短休息时间（分钟）", shortBreakTime, 1f..30f, 29) { shortBreakTime = it }
 
         // 长休息时间设置
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = "长休息时间（分钟）",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Slider(
-                    value = longBreakTime.toFloat(),
-                    onValueChange = { longBreakTime = it.toInt() },
-                    valueRange = 1f..60f, // 1分钟到60分钟
-                    steps = 59
-                )
-                Text(
-                    text = "$longBreakTime 分钟",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-        }
+        TimeSettingCard("长休息时间（分钟）", longBreakTime, 1f..60f, 59) { longBreakTime = it }
 
         // 统一的保存设置按钮
         Button(
@@ -119,7 +79,21 @@ fun SettingsScreen(timerController: TimerController) {
             Text("保存设置")
         }
 
-        // 在确认弹窗的确定按钮中，调用refreshTime
+        // 模式切换弹窗
+        showModeSwitchMessage?.let { message ->
+            AlertDialog(
+                onDismissRequest = { showModeSwitchMessage = null },
+                title = { Text("模式") },
+                text = { Text(message) },
+                confirmButton = {
+                    TextButton(onClick = { showModeSwitchMessage = null }) {
+                        Text("确定")
+                    }
+                }
+            )
+        }
+
+        // 确认弹窗
         if (showConfirmation) {
             AlertDialog(
                 onDismissRequest = { showConfirmation = false },
@@ -138,6 +112,40 @@ fun SettingsScreen(timerController: TimerController) {
                         Text("取消")
                     }
                 }
+            )
+        }
+    }
+}
+
+@Composable
+fun TimeSettingCard(
+    title: String,
+    currentValue: Int,
+    valueRange: ClosedFloatingPointRange<Float>,
+    steps: Int,
+    onValueChange: (Int) -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Slider(
+                value = currentValue.toFloat(),
+                onValueChange = { onValueChange(it.toInt()) },
+                valueRange = valueRange,
+                steps = steps
+            )
+            Text(
+                text = "$currentValue 分钟",
+                style = MaterialTheme.typography.bodyMedium
             )
         }
     }
