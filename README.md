@@ -304,7 +304,7 @@ The Data Synchronization feature allows users to synchronize tasks and progress 
     
 - **Efficiency**: Optimize the application's performance, including startup time, memory usage, and battery consumption. Use asynchronous operations and optimized algorithms to ensure the application runs efficiently.↳
     
-- **Testability**: Provide comprehensive testing, including unit tests, integration tests, and UI tests, ensuring all parts of the application work as expected.↳
+
     
 
 ### 5.5 Project Documentation
@@ -592,7 +592,7 @@ Pomodoro Timer是应用的核心功能模块，允许用户设置和启动计时
 - **可维护性**：采用模块化和可扩展的架构设计，代码结构清晰，遵循编码规范，便于后期的维护和功能扩展。使用版本控制和代码审查，提升代码质量。
 - **可扩展性**：系统设计应支持后续添加新功能（如高级统计、社交分享、第三方集成等），确保应用能够灵活扩展以满足未来需求。
 - **效率**：优化应用的性能，包括启动时间、内存使用和电池消耗。使用异步操作和优化的算法，确保应用高效运行。
-- **可测试性**：提供全面的测试，包括单元测试、集成测试和UI测试，确保应用的各个部分都能按预期工作。
+
 
 ### 5.5 Project Documentation
 
