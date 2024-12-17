@@ -157,4 +157,11 @@ class TimerController(private val taskController: TaskController) : ViewModel() 
     fun isCurrentLongBreak(): Boolean {
         return timerModel.isLongBreak()
     }
+
+    private val _currentTheme = MutableStateFlow(AppTheme.RED)
+    val currentTheme: StateFlow<AppTheme> get() = _currentTheme
+
+    fun setTheme(theme: AppTheme) {
+        _currentTheme.value = theme
+    }
 }

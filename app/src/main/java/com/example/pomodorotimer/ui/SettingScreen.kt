@@ -8,11 +8,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.pomodorotimer.controller.AppTheme
 import com.example.pomodorotimer.controller.TimerController
 
 @SuppressLint("DefaultLocale")
 @Composable
 fun SettingsScreen(timerController: TimerController) {
+    // 原有状态和变量
     var workTime by remember {
         mutableIntStateOf(timerController.getCurrentWorkTimeInMinutes())
     }
@@ -22,15 +24,21 @@ fun SettingsScreen(timerController: TimerController) {
     var longBreakTime by remember {
         mutableIntStateOf(timerController.getCurrentLongBreakTimeInMinutes())
     }
+
+    val isAutoMode by timerController.isAutoMode.collectAsState()
     var showConfirmation by remember { mutableStateOf(false) }
     var showModeSwitchMessage by remember { mutableStateOf<String?>(null) }
-    val isAutoMode by timerController.isAutoMode.collectAsState()
+
+    // 获取当前主题和可用主题列表
+    val currentTheme by timerController.currentTheme.collectAsState()
+    val themes = listOf(AppTheme.RED, AppTheme.BLUE, AppTheme.GREEN)
+    var expanded by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -38,7 +46,7 @@ fun SettingsScreen(timerController: TimerController) {
             style = MaterialTheme.typography.headlineMedium
         )
 
-        // 自动/手动切换按钮
+        // 自动/手动模式切换按钮
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
@@ -54,16 +62,33 @@ fun SettingsScreen(timerController: TimerController) {
             }
         }
 
-        // 工作时间设置
+        // 主题选择下拉框
+        Box {
+            Button(onClick = { expanded = true }) {
+                Text("当前主题：${currentTheme.name}")
+            }
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                themes.forEach { theme ->
+                    DropdownMenuItem(
+                        text = { Text(theme.name) },
+                        onClick = {
+                            timerController.setTheme(theme)
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+
+        // 工作时间
         TimeSettingCard("工作时间（分钟）", workTime, 1f..60f, 59) { workTime = it }
-
-        // 短休息时间设置
         TimeSettingCard("短休息时间（分钟）", shortBreakTime, 1f..30f, 29) { shortBreakTime = it }
-
-        // 长休息时间设置
         TimeSettingCard("长休息时间（分钟）", longBreakTime, 1f..60f, 59) { longBreakTime = it }
 
-        // 统一的保存设置按钮
+        // 保存按钮
         Button(
             onClick = {
                 timerController.updateWorkTime(workTime)
@@ -73,13 +98,13 @@ fun SettingsScreen(timerController: TimerController) {
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
+                .padding(top = 12.dp),
             shape = MaterialTheme.shapes.medium
         ) {
             Text("保存设置")
         }
 
-        // 模式切换弹窗
+        // 模式切换信息弹窗
         showModeSwitchMessage?.let { message ->
             AlertDialog(
                 onDismissRequest = { showModeSwitchMessage = null },
@@ -93,7 +118,7 @@ fun SettingsScreen(timerController: TimerController) {
             )
         }
 
-        // 确认弹窗
+        // 设置保存确认弹窗
         if (showConfirmation) {
             AlertDialog(
                 onDismissRequest = { showConfirmation = false },
@@ -102,7 +127,7 @@ fun SettingsScreen(timerController: TimerController) {
                 confirmButton = {
                     TextButton(onClick = {
                         showConfirmation = false
-                        timerController.refreshTime() // 刷新计时器时间
+                        timerController.refreshTime()
                     }) {
                         Text("确定")
                     }
@@ -130,7 +155,7 @@ fun TimeSettingCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(

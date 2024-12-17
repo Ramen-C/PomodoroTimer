@@ -29,6 +29,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.example.pomodorotimer.service.TimerService
 import com.example.pomodorotimer.theme.PomodoroTimerTheme
 
@@ -73,7 +75,8 @@ class MainActivity : ComponentActivity() {
 
         // 仅调用一次 setContent
         setContent {
-            PomodoroTimerTheme {
+            val currentTheme by timerController.currentTheme.collectAsState()
+            PomodoroTimerTheme(theme = currentTheme) {
                 PomodoroTimerApp(
                     taskController = taskController,
                     timerController = timerController
