@@ -1,13 +1,17 @@
-// TimerScreen.kt
 package com.example.pomodorotimer.ui
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.text.style.TextAlign
 import com.example.pomodorotimer.controller.TaskController
 import com.example.pomodorotimer.controller.TimerController
 
@@ -26,6 +30,12 @@ fun TimerScreen(
     var showTaskDialog by remember { mutableStateOf(false) }
     var showPromptDialog by remember { mutableStateOf(false) }
     var promptMessage by remember { mutableStateOf("") }
+
+    // 使用 remember 保存 totalTime，并在第一次渲染时设置它
+    val totalTime = remember { timeLeft }  // 锁定 totalTime 为初始的 timeLeft
+
+    // 计算进度条百分比
+    val progress = timeLeft / totalTime.toFloat()
 
     // 监听 promptShow 状态
     LaunchedEffect(promptShow) {
@@ -73,21 +83,43 @@ fun TimerScreen(
                 }
             )
         }
+        // 显示倒计时进度条
+        Box(
+            modifier = Modifier
+                .size(200.dp)
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            // 进度条的背景，浅紫色填充
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .background(color = Color(0xFFB19CD9), shape = CircleShape)
+            )
 
-        // 显示倒计时
-        Text(
-            text = String.format("%02d:%02d", timeLeft / 60, timeLeft % 60),
-            fontSize = 48.sp,
-            modifier = Modifier.padding(vertical = 16.dp)
-        )
+            // 圆形进度条
+            CircularProgressIndicator(
+                progress = progress,
+                modifier = Modifier.matchParentSize(),
+                strokeWidth = 10.dp,
+                color = MaterialTheme.colorScheme.primary
+            )
 
-        // 显示当前周期信息
+            // 倒计时数字
+            Text(
+                text = String.format("%02d:%02d", timeLeft / 60, timeLeft % 60),
+                fontSize = 48.sp,
+                color = Color.White,
+                textAlign = TextAlign.Center
+            )
+        }
+
+        // 显示当前周期状态
         Text(
             text = cycleInfo,
-            fontSize = 20.sp
+            fontSize = 20.sp,
+            color = MaterialTheme.colorScheme.primary
         )
-
-        // 自动/手动模式切换按钮
 
         // 控制按钮：开始/暂停 和 重置
         Row(
@@ -136,3 +168,4 @@ fun TimerScreen(
         }
     }
 }
+
