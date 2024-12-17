@@ -2,16 +2,39 @@
 package com.example.pomodorotimer.ui
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.ui.text.style.TextAlign
 import com.example.pomodorotimer.controller.TaskController
 import com.example.pomodorotimer.controller.TimerController
 
@@ -32,7 +55,12 @@ fun TimerScreen(
     var showPromptDialog by remember { mutableStateOf(false) }
     var promptMessage by remember { mutableStateOf("") }
 
-    // 使用 remember 保存 totalTime，并在第一次渲染时设置它
+    // 为按钮点击添加动效
+    val buttonColor by animateColorAsState(
+        targetValue = if (isRunning) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary,
+        label = ""
+    )
+
     val totalTime = remember { timeLeft }  // 锁定 totalTime 为初始的 timeLeft
 
     // 计算进度条百分比
@@ -58,22 +86,23 @@ fun TimerScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // 显示当前任务
-        Text(
-            text = "当前任务：${currentTask?.name ?: "未选择"}",
-            fontSize = 20.sp,
-            color = MaterialTheme.colorScheme.primary, // 使用主色
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
         // 任务选择按钮
         Button(
             onClick = { showTaskDialog = true },
-            modifier = Modifier.padding(vertical = 8.dp),
-            enabled = !isRunning // 计时中禁止更换任务
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .width(200.dp)
+                .height(48.dp),
+            shape = RoundedCornerShape(12.dp), // 12dp 的圆角
+            enabled = !isRunning
         ) {
-            Text("选择任务")
+            Text(
+                text = currentTask?.name?.let { "当前任务：$it" } ?: "选择任务",
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         }
+
 
         // 任务选择对话框
         if (showTaskDialog) {
@@ -90,7 +119,7 @@ fun TimerScreen(
         // 显示倒计时进度条
         Box(
             modifier = Modifier
-                .size(200.dp)
+                .size(300.dp)
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -140,7 +169,8 @@ fun TimerScreen(
                         timerController.startTimer()
                     }
                 },
-                enabled = (currentTask != null) // 当前任务为空时按钮禁用
+                enabled = (currentTask != null), // 当前任务为空时按钮禁用
+                colors = ButtonDefaults.buttonColors(containerColor = buttonColor) // 动态改变按钮颜色
             ) {
                 Text(if (isRunning) "暂停" else "开始")
             }
@@ -174,3 +204,5 @@ fun TimerScreen(
         }
     }
 }
+
+
