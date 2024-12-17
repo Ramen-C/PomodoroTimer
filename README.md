@@ -10,7 +10,17 @@
 
 ### 2.1 Product Perspective
 
-The Pomodoro Timer application is a standalone mobile app designed to help users improve productivity through time management. The system provides features such as timers, task management, and progress statistics, enabling users to better allocate and track their time. The application is designed around users' task and time management needs, adopting modern architectures and technology stacks to ensure high performance and maintainability. Users can select or create tasks and complete them through set Pomodoro Technique cycles. Additionally, the app records users' time distribution and working hours on different tasks, helping them reasonably allocate time among multiple tasks.
+The Tomato-Clock app is a standalone mobile app designed to help users increase productivity and focus through scientific time management methods. The core functionality of the application is designed around the user's time allocation and task management needs, and uses a modern architecture and technology stack to ensure high performance and good maintainability on different devices.
+
+The system helps users manage work and study time in the form of Pomodoro technique by providing an intuitive and easy-to-use timer function. Users can create, edit, and delete tasks, and set specific tomato time periods for each task. At the end of each tomato work cycle, users are automatically prompted to take short breaks, helping them to allocate their energy more efficiently and avoid fatigue.
+
+In addition to the core timing function, the app also integrates a task management module that enables users to clearly plan their daily, weekly and even long-term goals and to-do lists. Through classification and priority Settings, users can better adjust the order of tasks and allocate time reasonably to complete key tasks.
+
+The application also provides a powerful statistical function to record the user's time distribution, working hours and task completion rate on different tasks. Through visualizations and analysis reports, users can gain insight into their time usage patterns and productivity, and identify areas that need to be optimized to improve their work habits.
+
+The Tomato-Bell application is designed not only to focus on the needs of a single user, but also to support data backup and synchronization across multiple devices, ensuring that users can access and manage tasks seamlessly across different terminals. In addition, the system supports personalized Settings, including custom tomato cycle, notification reminders, theme switching and other options to meet the user's personalized preferences and use scenarios.
+
+In summary, the application aims to help users develop good time management habits and improve task completion efficiency by providing a simple, efficient and comprehensive time management platform, while taking into account the convenience and flexibility of use.
 
 ### 2.2 Product Functions
 
@@ -336,9 +346,19 @@ FR7: In cases where the system is charging, it should automatically exit power-s
 
 ## 2. Overall Description
 
-### 2.1 Product Perspective
+### 2.1 Product Perspective  
 
-番茄钟应用程序是一款独立的移动应用，旨在通过时间管理帮助用户提高生产力。系统通过提供计时器、任务管理和进度统计等功能，使用户能够更好地分配和跟踪时间。应用程序围绕用户的任务和时间管理需求设计，采用现代化的架构和技术栈，确保应用的高性能和可维护性。用户可以选择或创建任务，并通过设定的番茄工作法周期完成任务。此外，应用会记录用户在不同任务上的时间分布和工作时长，帮助用户合理安排多个任务的时间。
+番茄钟应用程序是一款独立运行的移动应用，旨在帮助用户通过科学的时间管理方法提高生产力和专注力。该应用的核心功能围绕用户的时间分配和任务管理需求设计，采用现代化的架构和技术栈，确保在不同设备上的高性能表现和良好的可维护性。  
+
+系统通过提供直观易用的计时器功能，帮助用户以番茄工作法的形式管理工作和学习时间。用户可以创建、编辑和删除任务，并为每个任务设定具体的番茄时间周期。在每个番茄工作周期结束时，系统会自动提示用户短暂休息，从而帮助他们更有效地分配精力，避免疲劳。  
+
+除了核心的计时功能，应用还集成了任务管理模块，使用户能够清晰地规划每日、每周甚至长期的目标和待办事项。通过分类和优先级设置，用户可以更好地调整任务顺序，合理分配时间以完成关键工作。  
+
+应用还提供了强大的数据统计功能，记录用户在不同任务上的时间分布、工作时长和任务完成率。通过可视化图表和分析报告，用户可以深入了解自己的时间使用模式和效率，发现需要优化的环节，进而提升工作习惯。  
+
+番茄钟应用程序的设计不仅专注于单一用户的需求，还支持数据备份与多设备同步，确保用户在不同终端上均可无缝访问和管理任务。此外，系统支持个性化设置，包括自定义番茄周期、通知提醒、主题切换等选项，以满足用户的个性化偏好和使用场景。  
+
+总之，该应用程序旨在通过提供一个简单、高效、功能全面的时间管理平台，帮助用户培养良好的时间管理习惯，提升任务完成效率，同时兼顾使用的便利性与灵活性。
 ### 2.2 Product Functions
 
 应用的主要功能包括：
