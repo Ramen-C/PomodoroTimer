@@ -45,11 +45,6 @@ This project implements a Pomodoro Timer application built with **Jetpack Compos
    - **MainActivity** showcases binding to a **TimerService** (though not heavily utilized in the given code, it’s prepared to handle background timing tasks if needed).
    - Activities like **TaskActivity** and **ProgressActivity** initialize their own controllers and set their UI content, following a modular approach.
 
-8. **Extensibility**:  
-   - Modify `TimerModel` parameters or UI inputs in **SettingsScreen** to customize durations and cycles.
-   - Integrate new charts, analytics, or notification systems to further support productivity tracking.
-   - Leverage MVVM + StateFlow patterns to easily add new screens or features without extensive refactoring.
-
 
 ## Running the Application
 
@@ -112,10 +107,6 @@ This project implements a Pomodoro Timer application built with **Jetpack Compos
    - **MainActivity** 展示了绑定 **TimerService** 的示例，后续可扩展为在后台计时，确保应用在前台不可见时仍能正常运行（如有需要）。  
    - **TaskActivity**、**ProgressActivity** 等演示了在不同界面中初始化各自的 Controller 并设置对应 UI 内容，实现模块化设计。
 
-8. **可扩展性**：  
-   - 可通过修改 `TimerModel` 或 UI 界面，轻松自定义工作/休息时长，丰富设置项。  
-   - 可新增图表、统计分析功能，或加入通知提醒、后台运行等高级特性。  
-   - 借助 MVVM + StateFlow，添加新功能或新界面无需大规模重构。
 
 
 ## 运行说明
