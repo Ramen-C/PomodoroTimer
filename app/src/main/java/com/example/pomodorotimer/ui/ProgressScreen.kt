@@ -2,8 +2,12 @@
 package com.example.pomodorotimer.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.pomodorotimer.controller.TaskController
@@ -28,28 +32,46 @@ fun ProgressScreen(
             TopAppBar(title = { Text("进度跟踪") })
         }
     ) { padding ->
-        Column(
+        // 使用 LazyColumn 替代 Column + verticalScroll
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            verticalArrangement = Arrangement.spacedBy(24.dp) // 组件间距
         ) {
             // 1. 每日完成的番茄周期数柱状图
-            Text(text = "每日完成的番茄周期数", style = MaterialTheme.typography.titleMedium)
-            DailyCycleBarChart(cyclesPerDay = cyclesPerDay)
+            item {
+                Text(text = "每日完成的番茄周期数", style = MaterialTheme.typography.titleMedium)
+                DailyCycleBarChart(
+                    cyclesPerDay = cyclesPerDay,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp) // 设置固定高度
+                )
+            }
 
             // 2. 任务时间分布饼图
-            Text(text = "任务时间分布", style = MaterialTheme.typography.titleMedium)
-            TaskTimePieChart(taskTimeStats = taskTimeStats)
+            item {
+                Text(text = "任务时间分布", style = MaterialTheme.typography.titleMedium)
+                TaskTimePieChart(
+                    taskTimeStats = taskTimeStats,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp) // 设置固定高度
+                )
+            }
 
             // 3. 番茄周期完成趋势折线图
-            Text(text = "番茄周期完成趋势", style = MaterialTheme.typography.titleMedium)
-            CycleTrendLineChart(cyclesTrend = cyclesTrend)
-
-            // 4. 工作时间分布饼图（如果实现）
-            // Text(text = "工作时间分布", style = MaterialTheme.typography.titleMedium)
-            // WorkTimePieChart(workTimeDistribution = workTimeDistribution)
+            item {
+                Text(text = "番茄周期完成趋势", style = MaterialTheme.typography.titleMedium)
+                CycleTrendLineChart(
+                    cyclesTrend = cyclesTrend,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp) // 设置固定高度
+                )
+            }
         }
     }
 }

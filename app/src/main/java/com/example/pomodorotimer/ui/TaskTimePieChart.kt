@@ -1,9 +1,12 @@
 // TaskTimePieChart.kt
 package com.example.pomodorotimer.ui
 
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import android.graphics.Color as AndroidColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.pomodorotimer.model.TaskTimeStat
 import com.github.mikephil.charting.charts.PieChart
@@ -28,6 +31,8 @@ fun TaskTimePieChart(taskTimeStats: List<TaskTimeStat>, modifier: Modifier = Mod
             }
         },
         modifier = modifier
+            .fillMaxWidth()
+            .height(300.dp) // 设置固定高度，您可以根据需要调整
     ) { pieChart ->
         if (taskTimeStats.isEmpty()) {
             pieChart.clear()

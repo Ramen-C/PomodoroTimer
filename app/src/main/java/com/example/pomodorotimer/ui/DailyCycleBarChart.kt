@@ -1,16 +1,19 @@
 // DailyCycleBarChart.kt
 package com.example.pomodorotimer.ui
 
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import android.graphics.Color as AndroidColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.example.pomodorotimer.model.CycleCount
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
-import com.example.pomodorotimer.model.CycleCount
 
 @Composable
 fun DailyCycleBarChart(cyclesPerDay: List<CycleCount>, modifier: Modifier = Modifier) {
@@ -28,6 +31,8 @@ fun DailyCycleBarChart(cyclesPerDay: List<CycleCount>, modifier: Modifier = Modi
             }
         },
         modifier = modifier
+            .fillMaxWidth()
+            .height(300.dp) // 设置固定高度，您可以根据需要调整
     ) { barChart ->
         if (cyclesPerDay.isEmpty()) {
             barChart.clear()
