@@ -7,7 +7,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.shape.CircleShape
@@ -15,6 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.example.pomodorotimer.controller.TaskController
 import com.example.pomodorotimer.controller.TimerController
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun TimerScreen(
     timerController: TimerController,
@@ -41,7 +41,6 @@ fun TimerScreen(
     LaunchedEffect(promptShow) {
         if (promptShow) {
             showPromptDialog = true
-            // 设置提示消息
             promptMessage = if (isAutoMode && timerController.isCurrentLongBreak()) {
                 "您已完成一轮工作！"
             } else {
@@ -53,6 +52,7 @@ fun TimerScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background) // 使用主题中的背景色
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -61,6 +61,7 @@ fun TimerScreen(
         Text(
             text = "当前任务：${currentTask?.name ?: "未选择"}",
             fontSize = 20.sp,
+            color = MaterialTheme.colorScheme.primary, // 使用主色
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
@@ -73,7 +74,6 @@ fun TimerScreen(
             Text("选择任务")
         }
 
-
         // 任务选择对话框
         if (showTaskDialog) {
             TaskDialog(
@@ -85,6 +85,7 @@ fun TimerScreen(
                 }
             )
         }
+
         // 显示倒计时进度条
         Box(
             modifier = Modifier
@@ -92,26 +93,26 @@ fun TimerScreen(
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
-            // 进度条的背景，浅紫色填充
+            // 进度条的背景，使用浅红色填充
             Box(
                 modifier = Modifier
                     .matchParentSize()
-                    .background(color = Color(0xFFB19CD9), shape = CircleShape)
+                    .background(color = MaterialTheme.colorScheme.surface, shape = CircleShape)
             )
 
             // 圆形进度条
             CircularProgressIndicator(
-                progress = progress,
+                progress = { progress },
                 modifier = Modifier.matchParentSize(),
+                color = MaterialTheme.colorScheme.primary, // 使用主色
                 strokeWidth = 10.dp,
-                color = MaterialTheme.colorScheme.primary
             )
 
             // 倒计时数字
             Text(
                 text = String.format("%02d:%02d", timeLeft / 60, timeLeft % 60),
                 fontSize = 48.sp,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onPrimary, // 倒计时数字使用主要颜色的对比色
                 textAlign = TextAlign.Center
             )
         }
@@ -120,7 +121,7 @@ fun TimerScreen(
         Text(
             text = cycleInfo,
             fontSize = 20.sp,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary // 使用主色
         )
 
         // 控制按钮：开始/暂停 和 重置
@@ -172,4 +173,3 @@ fun TimerScreen(
         }
     }
 }
-
