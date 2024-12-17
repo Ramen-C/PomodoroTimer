@@ -67,8 +67,7 @@ This project implements a Pomodoro Timer application built with **Jetpack Compos
 ---
 # 番茄工作法定时器应用
 
-本项目是一个基于 **Jetpack Compose**、**ViewModel**、**StateFlow**、**Room** 数据库，并结合 **MPAndroidChart** 进行数据可视化的番茄工作法定时器应用。通过有序的工作与休息周期、灵活的任务管理和直观的数据分析，本应用旨在帮助用户高效安排时间、追踪工作进度与习惯趋势。1. **时序和周期管理**：  
-   - TimerModel 定义工作持续时间、短暂休息和长时间休息（以秒为单位）的默认值。  
+本项目是一个基于 **Jetpack Compose**、**ViewModel**、**StateFlow**、**Room** 数据库，并结合 **MPAndroidChart** 进行数据可视化的番茄工作法定时器应用。通过有序的工作与休息周期、灵活的任务管理和直观的数据分析，本应用旨在帮助用户高效安排时间、追踪工作进度与习惯趋势。
 ## 核心特性
 
 1. **番茄周期管理**：  
