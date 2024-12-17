@@ -48,14 +48,25 @@ fun TaskScreen(
     }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(title = { Text("任务管理") })
+            TopAppBar(
+                title = { Text("任务管理", color = MaterialTheme.colorScheme.onPrimary) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary
+                )
+            )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                currentTask = null
-                showDialog = true
-            }) {
+            FloatingActionButton(
+                onClick = {
+                    currentTask = null
+                    showDialog = true
+                },
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary
+            ) {
                 Icon(Icons.Default.Add, contentDescription = "新建任务")
             }
         }
