@@ -249,16 +249,15 @@ The Data Synchronization feature allows users to synchronize tasks and progress 
 - During synchronization, the system handles possible data conflicts to ensure data consistency.
 - After synchronization is complete, the system displays information about the success or failure of the synchronization on the interface.
 
-#### 4.4.3 Functional Requirements
 
-- **FR1**: The system automatically detects the network status and, when the network is available, uses background synchronization strategies to automatically synchronize local data to the backend server.
-- **FR2**: Users can manually trigger data synchronization to immediately update the latest tasks and progress data.
-- **FR3**: During synchronization, the system transmits data in JSON format to the backend server through secure APIs (using HTTPS and JWT authentication) to ensure data integrity and security.
-- **FR4**: The system implements incremental synchronization, transmitting only data that has changed since the last synchronization to optimize network usage and synchronization efficiency.
-- **FR5**: The system should handle data conflicts during synchronization and adopt appropriate strategies (such as prioritizing the most recent modifications) to resolve conflicts.
-- **FR6**: After synchronization is complete, the system should prompt the synchronization status on the interface, such as success or failure, and provide necessary error information.
-- **FR7**: When the network is unavailable, the system should prompt the user and support offline mode, automatically synchronizing data when the network is restored.
----
+##4.4.3 Functional Requirements
+FR1: The system should automatically monitor the power status of the device and trigger power-saving mode when the battery level drops below a predefined threshold.
+FR2: Users can manually activate or deactivate power-saving mode to customize their energy usage preferences.
+FR3: During power-saving mode, the system optimizes resource usage by reducing background activity, dimming the screen, and lowering processor performance to extend battery life.
+FR4: The system should track power consumption metrics in real-time and provide a summary report to the user, highlighting energy-intensive applications.
+FR5: The system must notify the user when the battery level is critically low and suggest connecting to a power source to avoid unexpected shutdowns.
+FR6: Power-saving settings should be configurable, allowing users to adjust thresholds, select optimization levels, and enable or disable specific features.
+FR7: In cases where the system is charging, it should automatically exit power-saving mode and prioritize performance over energy efficiency.
 ## 5. Other Nonfunctional Requirements
 
 ### 5.1 Performance Requirements
