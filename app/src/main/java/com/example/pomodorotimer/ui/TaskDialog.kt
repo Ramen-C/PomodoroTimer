@@ -1,7 +1,9 @@
+// TaskDialog.kt
 package com.example.pomodorotimer.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -26,6 +28,7 @@ fun TaskDialog(
         }
     }
 
+    // 显示编辑对话框（新建或编辑）
     if (showEditDialog) {
         EditTaskDialog(
             task = currentTask,
@@ -55,6 +58,10 @@ fun TaskDialog(
                     tasks = taskList,
                     onTaskSelected = { task ->
                         onTaskSelected(task)
+                    },
+                    onTaskLongPressed = { task ->
+                        currentTask = task
+                        showEditDialog = true
                     }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -80,17 +87,18 @@ fun TaskDialog(
 @Composable
 fun TaskList(
     tasks: List<Task>,
-    onTaskSelected: (Task) -> Unit
+    onTaskSelected: (Task) -> Unit,
+    onTaskLongPressed: (Task) -> Unit // 新增回调，用于长按
 ) {
     if (tasks.isEmpty()) {
         Text("没有可选择的任务", style = MaterialTheme.typography.bodyLarge)
     } else {
         LazyColumn {
-            items(tasks.size) { index ->
-                val task = tasks[index]
+            items(tasks) { task ->
                 TaskItem(
                     task = task,
-                    onClick = { onTaskSelected(task) }
+                    onClick = { onTaskSelected(task) },
+                    onLongClick = { onTaskLongPressed(task) } // 将长按事件传出
                 )
             }
         }

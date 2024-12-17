@@ -67,10 +67,12 @@ fun TimerScreen(
         // 任务选择按钮
         Button(
             onClick = { showTaskDialog = true },
-            modifier = Modifier.padding(vertical = 8.dp)
+            modifier = Modifier.padding(vertical = 8.dp),
+            enabled = !isRunning // 计时中禁止更换任务
         ) {
             Text("选择任务")
         }
+
 
         // 任务选择对话框
         if (showTaskDialog) {
@@ -135,13 +137,15 @@ fun TimerScreen(
                     } else {
                         timerController.startTimer()
                     }
-                }
+                },
+                enabled = (currentTask != null) // 当前任务为空时按钮禁用
             ) {
                 Text(if (isRunning) "暂停" else "开始")
             }
 
             Button(
-                onClick = { timerController.resetTimer() }
+                onClick = { timerController.resetTimer() },
+                enabled = (currentTask != null) // 当前任务为空时按钮禁用
             ) {
                 Text("重置")
             }

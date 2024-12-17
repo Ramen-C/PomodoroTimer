@@ -1,3 +1,4 @@
+// TaskItem.kt
 package com.example.pomodorotimer.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -15,7 +16,7 @@ import com.example.pomodorotimer.model.Task
 fun TaskItem(
     task: Task,
     onClick: () -> Unit,
-    onLongClick: () -> Unit = {}  // 默认值为空操作
+    onLongClick: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier

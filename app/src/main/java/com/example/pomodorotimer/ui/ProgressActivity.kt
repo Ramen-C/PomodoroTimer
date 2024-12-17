@@ -28,7 +28,7 @@ class ProgressActivity : ComponentActivity() {
 
         setContent {
             PomodoroTimerTheme {
-                ProgressScreen(taskController,timerController)
+                ProgressScreen(taskController)
             }
         }
     }

@@ -15,7 +15,6 @@ import com.example.pomodorotimer.model.TaskTimeStat
 @Composable
 fun ProgressScreen(
     taskController: TaskController,
-    timerController: TimerController
 ) {
     // 使用 Flow 和 collectAsState 监听数据变化
     val cyclesPerDay by taskController.getCyclesPerDayFlow().collectAsState(initial = emptyList())
