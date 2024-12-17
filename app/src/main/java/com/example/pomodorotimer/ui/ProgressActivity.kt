@@ -9,7 +9,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.example.pomodorotimer.controller.TaskController
 import com.example.pomodorotimer.controller.TimerController
-import com.example.pomodorotimer.controller.AppTheme
 import com.example.pomodorotimer.data.AppDatabase
 import com.example.pomodorotimer.model.TaskModel
 import com.example.pomodorotimer.theme.PomodoroTimerTheme

@@ -3,7 +3,6 @@ package com.example.pomodorotimer.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -11,9 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.pomodorotimer.controller.TaskController
-import com.example.pomodorotimer.controller.TimerController
-import com.example.pomodorotimer.model.CycleCount
-import com.example.pomodorotimer.model.TaskTimeStat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
