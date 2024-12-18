@@ -15,18 +15,18 @@ private val RedThemeColors = lightColorScheme(
 )
 
 private val BlueThemeColors = lightColorScheme(
-    primary = Color(0xFF2196F3),
-    onPrimary = Color.White,
-    background = Color(0xFFE3F2FD),
-    surface = Color(0xFFBBDEFB),
+    primary = BluePrimary,
+    onPrimary = BlueOnPrimary,
+    background = BlueBackground,
+    surface = BlueSurface,
     onSurface = Color.Black
 )
 
 private val GreenThemeColors = lightColorScheme(
-    primary = Color(0xFF4CAF50),
-    onPrimary = Color.White,
-    background = Color(0xFFE8F5E9),
-    surface = Color(0xFFC8E6C9),
+    primary = GreenPrimary,
+    onPrimary = GreenOnPrimary,
+    background = GreenBackground,
+    surface = GreenSurface,
     onSurface = Color.Black
 )
 
