@@ -1,11 +1,6 @@
-@file:Suppress("DEPRECATION")
-
 package com.example.pomodorotimer.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.res.Configuration
-import android.os.Build
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -13,43 +8,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.pomodorotimer.R
 import com.example.pomodorotimer.controller.AppTheme
 import com.example.pomodorotimer.controller.TimerController
-import java.util.Locale
-/**
- * 切换语言函数 (中文 <-> 英文)
- * @param context 当前的 Context
- */
-fun toggleAppLanguage(context: Context) {
-    val currentLocale = context.resources.configuration.locales[0]
-    val newLocale = if (currentLocale.language == "zh") Locale.ENGLISH else Locale.SIMPLIFIED_CHINESE
-
-    // 更新 Configuration 并创建一个新的 Context
-    val configuration = Configuration(context.resources.configuration)
-    configuration.setLocale(newLocale)
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        context.createConfigurationContext(configuration)
-    } else {
-        context.resources.updateConfiguration(configuration, context.resources.displayMetrics)
-    }
-
-    // 强制重建当前的 Activity，确保生效
-    if (context is android.app.Activity) {
-        context.recreate()
-    }
-}
 
 
 @SuppressLint("DefaultLocale")
 @Composable
 fun SettingsScreen(timerController: TimerController) {
-    // 语言切换逻辑
-    val context = LocalContext.current
 
     // 原有状态和变量
     var workTime by remember { mutableIntStateOf(timerController.getCurrentWorkTimeInMinutes()) }
@@ -88,7 +56,7 @@ fun SettingsScreen(timerController: TimerController) {
         // 主题选择下拉框
         Box {
             Button(onClick = { expanded = true }) {
-                Text("当前主题：${currentTheme.name}")
+                Text("Current Theme：${currentTheme.name}")
             }
             DropdownMenu(
                 expanded = expanded,
@@ -114,7 +82,7 @@ fun SettingsScreen(timerController: TimerController) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "启用摇晃停止计时",
+                text = "Enable Focus Mode",
                 modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.bodyLarge
             )
@@ -134,31 +102,22 @@ fun SettingsScreen(timerController: TimerController) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "启用自动模式",
+                text = "Enable Auto Mode",
                 modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.bodyLarge
             )
             Switch(
                 checked = isAutoMode,
-                onCheckedChange = { enabled ->
+                onCheckedChange = {
                     timerController.toggleAutoMode()
                 }
             )
         }
 
-        Button(
-            onClick = { toggleAppLanguage(context) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
-            Text(stringResource(id = R.string.toggle_language))
-        }
-
         // **时间设置卡片**
-        TimeSettingCard("工作时间（分钟）", workTime, 1f..60f, 59) { workTime = it }
-        TimeSettingCard("短休息时间（分钟）", shortBreakTime, 1f..30f, 29) { shortBreakTime = it }
-        TimeSettingCard("长休息时间（分钟）", longBreakTime, 1f..60f, 59) { longBreakTime = it }
+        TimeSettingCard("Work Time (Minutes)", workTime, 1f..60f, 59) { workTime = it }
+        TimeSettingCard("Short Break Time (Minutes)", shortBreakTime, 1f..30f, 29) { shortBreakTime = it }
+        TimeSettingCard("Long Break Time (Minutes)", longBreakTime, 1f..60f, 59) { longBreakTime = it }
 
         // **保存按钮**
         Button(
@@ -180,11 +139,11 @@ fun SettingsScreen(timerController: TimerController) {
         showModeSwitchMessage?.let { message ->
             AlertDialog(
                 onDismissRequest = { showModeSwitchMessage = null },
-                title = { Text("模式") },
+                title = { Text("Mode") },
                 text = { Text(message) },
                 confirmButton = {
                     TextButton(onClick = { showModeSwitchMessage = null }) {
-                        Text("确定")
+                        Text("OK")
                     }
                 }
             )
@@ -194,19 +153,19 @@ fun SettingsScreen(timerController: TimerController) {
         if (showConfirmation) {
             AlertDialog(
                 onDismissRequest = { showConfirmation = false },
-                title = { Text("设置已保存") },
-                text = { Text("新的设置已成功保存。是否立即刷新计时器？") },
+                title = { Text("Settings Saved") },
+                text = { Text("New settings have been successfully saved. Do you want to refresh the timer now?") },
                 confirmButton = {
                     TextButton(onClick = {
                         showConfirmation = false
                         timerController.refreshTime()
                     }) {
-                        Text("确定")
+                        Text("OK")
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showConfirmation = false }) {
-                        Text("取消")
+                        Text("Cancel")
                     }
                 }
             )

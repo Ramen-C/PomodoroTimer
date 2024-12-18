@@ -24,11 +24,13 @@ abstract class AppDatabase : RoomDatabase() {
                 ).build().also { instance = it }
             }
 
-        fun deleteDatabase(context: Context) {
-            synchronized(this) {
-                context.deleteDatabase("app_database") // 删除数据库文件
-                instance = null // 确保实例被重置
-            }
-        }
+        //删除数据库
+//        fun deleteDatabase(context: Context) {
+//            synchronized(this) {
+//                context.deleteDatabase("app_database") // 删除数据库文件
+//                instance = null // 确保实例被重置
+//            }
+//        }
+
     }
 }

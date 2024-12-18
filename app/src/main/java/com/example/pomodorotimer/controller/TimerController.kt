@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class TimerController(private val taskController: TaskController) : ViewModel() {
-    val timerModel = TimerModel()
+    private val timerModel = TimerModel()
     private var timerJob: Job? = null
 
     private val _currentTask = MutableStateFlow<Task?>(null)
@@ -26,7 +26,6 @@ class TimerController(private val taskController: TaskController) : ViewModel() 
     val isRunning: StateFlow<Boolean> get() = _isRunning
 
     private val _isWorking = MutableStateFlow(timerModel.isWorkingState)
-    val isWorking: StateFlow<Boolean> get() = _isWorking
 
     private val _cycleInfo = MutableStateFlow(timerModel.getCurrentCycleInfo())
     val cycleInfo: StateFlow<String> get() = _cycleInfo

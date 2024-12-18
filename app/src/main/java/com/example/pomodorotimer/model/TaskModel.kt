@@ -6,7 +6,6 @@ import com.example.pomodorotimer.data.CycleDao
 import com.example.pomodorotimer.data.TaskDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 class TaskModel(private val taskDao: TaskDao, private val cycleDao: CycleDao) {
@@ -46,38 +45,12 @@ class TaskModel(private val taskDao: TaskDao, private val cycleDao: CycleDao) {
         }
     }
 
-    // 获取任务时间统计
-    suspend fun getTaskTimeStats(): List<TaskTimeStat> {
-        return withContext(Dispatchers.IO) {
-            taskDao.getTaskTimeStatsFlow().first()
-        }
-    }
 
     // 插入周期
     suspend fun insertCycle(cycle: Cycle) {
         withContext(Dispatchers.IO) {
             cycleDao.insertCycle(cycle)
         }
-    }
-
-    // 获取每日番茄周期数
-    suspend fun getCyclesPerDay(): List<CycleCount> {
-        return withContext(Dispatchers.IO) {
-            cycleDao.getCyclesPerDayFlow().first()
-        }
-    }
-
-    // 获取番茄周期完成趋势
-    suspend fun getCyclesTrend(): List<CycleCount> {
-        return withContext(Dispatchers.IO) {
-            cycleDao.getCyclesTrendFlow().first()
-        }
-    }
-
-    // 获取工作时间分布
-    fun getWorkTimeDistribution(): Map<String, Map<String, Int>> {
-        // 实现工作时间分布的统计逻辑
-        return emptyMap()
     }
 
     // 使用 Flow 的统计数据获取方法

@@ -22,9 +22,9 @@ fun TaskTimePieChart(taskTimeStats: List<TaskTimeStat>, modifier: Modifier = Mod
             PieChart(context).apply {
                 description.isEnabled = false
                 setUsePercentValues(true)
-                setDrawHoleEnabled(true)
+                isDrawHoleEnabled = true
                 holeRadius = 50f
-                setTransparentCircleRadius(55f)
+                transparentCircleRadius = 55f
                 legend.isEnabled = true
                 legend.form = Legend.LegendForm.CIRCLE
                 legend.textSize = 12f
@@ -42,7 +42,7 @@ fun TaskTimePieChart(taskTimeStats: List<TaskTimeStat>, modifier: Modifier = Mod
         val entries = taskTimeStats.map { stat ->
             PieEntry(stat.totalTimeSpent.toFloat() / 60f, stat.name) // 将秒转换为分钟
         }
-        val dataSet = PieDataSet(entries, "任务时间分布").apply {
+        val dataSet = PieDataSet(entries, "Task Time Distribution").apply {
             colors = listOf(
                 AndroidColor.RED,
                 AndroidColor.GREEN,

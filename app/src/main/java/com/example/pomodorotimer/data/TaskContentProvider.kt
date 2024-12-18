@@ -39,7 +39,7 @@ class TaskContentProvider : ContentProvider() {
         selection: String?,
         selectionArgs: Array<String>?,
         sortOrder: String?
-    ): Cursor? {
+    ): Cursor {
         return when (uriMatcher.match(uri)) {
             TASKS -> {
                 val cursor = taskDao.getTasksCursor()
@@ -56,7 +56,7 @@ class TaskContentProvider : ContentProvider() {
         }
     }
 
-    override fun getType(uri: Uri): String? {
+    override fun getType(uri: Uri): String {
         return when (uriMatcher.match(uri)) {
             TASKS -> "vnd.android.cursor.dir/$AUTHORITY.$TASKS_TABLE"
             TASK_ID -> "vnd.android.cursor.item/$AUTHORITY.$TASKS_TABLE"
@@ -64,7 +64,7 @@ class TaskContentProvider : ContentProvider() {
         }
     }
 
-    override fun insert(uri: Uri, values: ContentValues?): Uri? {
+    override fun insert(uri: Uri, values: ContentValues?): Uri {
         return when (uriMatcher.match(uri)) {
             TASKS -> {
                 val task = Task.fromContentValues(values)

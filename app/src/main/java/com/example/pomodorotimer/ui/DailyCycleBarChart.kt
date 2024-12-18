@@ -43,7 +43,7 @@ fun DailyCycleBarChart(cyclesPerDay: List<CycleCount>, modifier: Modifier = Modi
         val entries = sortedCycles.mapIndexed { index, cycleCount ->
             BarEntry(index.toFloat(), cycleCount.count.toFloat())
         }
-        val dataSet = BarDataSet(entries, "每日番茄周期数").apply {
+        val dataSet = BarDataSet(entries, "Daily Pomodoro Cycles").apply {
             color = AndroidColor.BLUE
             valueTextColor = AndroidColor.BLACK
             valueTextSize = 12f

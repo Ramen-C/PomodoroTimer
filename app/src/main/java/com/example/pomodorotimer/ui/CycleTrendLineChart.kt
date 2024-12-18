@@ -42,7 +42,7 @@ fun CycleTrendLineChart(cyclesTrend: List<CycleCount>, modifier: Modifier = Modi
         val entries = sortedTrend.mapIndexed { index, cycleCount ->
             Entry(index.toFloat(), cycleCount.count.toFloat())
         }
-        val dataSet = LineDataSet(entries, "番茄周期完成趋势").apply {
+        val dataSet = LineDataSet(entries, "Pomodoro Cycle Completion Trend").apply {
             color = AndroidColor.BLUE
             lineWidth = 2f
             setDrawCircles(true)

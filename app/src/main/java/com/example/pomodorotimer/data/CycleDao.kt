@@ -19,23 +19,7 @@ interface CycleDao {
         GROUP BY DATE(timestamp / 1000, 'unixepoch') 
         ORDER BY date DESC
     """)
-    suspend fun getCyclesPerDay(): List<CycleCount>
 
-    @Query("""
-        SELECT DATE(timestamp / 1000, 'unixepoch') as date, COUNT(*) as count 
-        FROM cycles 
-        GROUP BY DATE(timestamp / 1000, 'unixepoch') 
-        ORDER BY date ASC
-    """)
-    suspend fun getCyclesTrend(): List<CycleCount>
-
-    // Flow形式的方法，用于实时数据监听
-    @Query("""
-        SELECT DATE(timestamp / 1000, 'unixepoch') as date, COUNT(*) as count 
-        FROM cycles 
-        GROUP BY DATE(timestamp / 1000, 'unixepoch') 
-        ORDER BY date DESC
-    """)
     fun getCyclesPerDayFlow(): Flow<List<CycleCount>>
 
     @Query("""

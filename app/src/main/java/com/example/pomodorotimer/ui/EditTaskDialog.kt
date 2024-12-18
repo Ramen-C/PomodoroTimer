@@ -21,19 +21,19 @@ fun EditTaskDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(if (task == null) "新建任务" else "编辑任务") },
+        title = { Text(if (task == null) "Create New Task" else "Edit Task") },
         text = {
             Column {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("任务名称") },
+                    label = { Text("Task Name") },
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text("任务描述") },
+                    label = { Text("Task Description") },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -50,7 +50,7 @@ fun EditTaskDialog(
                     onDismiss()  // 关闭对话框
                 }
             }) {
-                Text("保存")
+                Text("Save")
             }
         },
         dismissButton = {
@@ -60,11 +60,11 @@ fun EditTaskDialog(
                         taskController.deleteTask(task, onDeleteComplete)  // 传递回调
                         onDismiss()  // 关闭对话框
                     }) {
-                        Text("删除")
+                        Text("Delete")
                     }
                 }
                 TextButton(onClick = onDismiss) {
-                    Text("取消")
+                    Text("Cancel")
                 }
             }
         }

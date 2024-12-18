@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pomodorotimer.controller.TaskController
 import com.example.pomodorotimer.controller.TimerController
-import kotlinx.coroutines.launch
 import kotlin.math.sqrt
 
 @SuppressLint("DefaultLocale")
@@ -93,9 +92,9 @@ fun TimerScreen(
         if (promptShow) {
             showPromptDialog = true
             promptMessage = if (isAutoMode && timerController.isCurrentLongBreak()) {
-                "您已完成一轮工作！"
+                "You have completed a round of work!"
             } else {
-                "当前阶段已完成！"
+                "Current stage completed!"
             }
         }
     }
@@ -118,7 +117,7 @@ fun TimerScreen(
             enabled = !isRunning
         ) {
             Text(
-                text = currentTask?.name?.let { "当前任务：$it" } ?: "选择任务",
+                text = currentTask?.name?.let { "Current Task：$it" } ?: "Select Task",
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onPrimary
             )
@@ -185,14 +184,14 @@ fun TimerScreen(
                 enabled = (currentTask != null),
                 colors = ButtonDefaults.buttonColors(containerColor = buttonColor)
             ) {
-                Text(if (isRunning) "暂停" else "开始")
+                Text(if (isRunning) "Pause" else "Start")
             }
 
             Button(
                 onClick = { timerController.resetTimer() },
                 enabled = (currentTask != null)
             ) {
-                Text("重置")
+                Text("Reset")
             }
         }
 
@@ -202,14 +201,14 @@ fun TimerScreen(
                     showPromptDialog = false
                     timerController.resetPromptShow()
                 },
-                title = { Text(text = "提示") },
+                title = { Text(text = "Hint") },
                 text = { Text(promptMessage) },
                 confirmButton = {
                     TextButton(onClick = {
                         showPromptDialog = false
                         timerController.resetPromptShow()
                     }) {
-                        Text("确定")
+                        Text("Confirm")
                     }
                 }
             )
@@ -218,11 +217,11 @@ fun TimerScreen(
         if (showShakeWarningDialog) {
             AlertDialog(
                 onDismissRequest = { showShakeWarningDialog = false },
-                title = { Text(text = "警告") },
-                text = { Text("请勿摇晃设备，否则计时将暂停！") },
+                title = { Text(text = "Warning") },
+                text = { Text("Do not shake the device, or the timer will pause!") },
                 confirmButton = {
                     TextButton(onClick = { showShakeWarningDialog = false }) {
-                        Text("确定")
+                        Text("Confirm")
                     }
                 }
             )

@@ -78,37 +78,6 @@ class TaskController(private val taskModel: TaskModel) {
         }
     }
 
-    // 获取任务时间统计
-    fun getTaskTimeStats(onResult: (List<TaskTimeStat>) -> Unit) {
-        CoroutineScope(Dispatchers.Main).launch {
-            val taskTimeStats = taskModel.getTaskTimeStats()
-            onResult(taskTimeStats)
-        }
-    }
-
-    // 获取每日番茄周期数
-    fun getCyclesPerDay(onResult: (List<CycleCount>) -> Unit) {
-        CoroutineScope(Dispatchers.Main).launch {
-            val cycles = taskModel.getCyclesPerDay()
-            onResult(cycles)
-        }
-    }
-
-    // 获取番茄周期完成趋势
-    fun getCyclesTrend(onResult: (List<CycleCount>) -> Unit) {
-        CoroutineScope(Dispatchers.Main).launch {
-            val trend = taskModel.getCyclesTrend()
-            onResult(trend)
-        }
-    }
-
-    // 获取工作时间分布
-    fun getWorkTimeDistribution(onResult: (Map<String, Map<String, Int>>) -> Unit) {
-        CoroutineScope(Dispatchers.Main).launch {
-            val distribution = taskModel.getWorkTimeDistribution()
-            onResult(distribution)
-        }
-    }
 
     // 获取 Flow 形式的数据，用于 ProgressScreen
     fun getTaskTimeStatsFlow(): Flow<List<TaskTimeStat>> {

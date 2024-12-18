@@ -23,7 +23,7 @@ fun ProgressScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("进度跟踪") })
+            TopAppBar(title = { Text("Progress Tracking") })
         }
     ) { padding ->
         // 使用 LazyColumn 替代 Column + verticalScroll
@@ -36,7 +36,7 @@ fun ProgressScreen(
         ) {
             // 1. 每日完成的番茄周期数柱状图
             item {
-                Text(text = "每日完成的番茄周期数", style = MaterialTheme.typography.titleMedium)
+                Text(text = "Number of Pomodoro Cycles Completed Daily", style = MaterialTheme.typography.titleMedium)
                 DailyCycleBarChart(
                     cyclesPerDay = cyclesPerDay,
                     modifier = Modifier
@@ -47,7 +47,7 @@ fun ProgressScreen(
 
             // 2. 任务时间分布饼图
             item {
-                Text(text = "任务时间分布", style = MaterialTheme.typography.titleMedium)
+                Text(text = "Task Time Distribution", style = MaterialTheme.typography.titleMedium)
                 TaskTimePieChart(
                     taskTimeStats = taskTimeStats,
                     modifier = Modifier
@@ -58,7 +58,7 @@ fun ProgressScreen(
 
             // 3. 番茄周期完成趋势折线图
             item {
-                Text(text = "番茄周期完成趋势", style = MaterialTheme.typography.titleMedium)
+                Text(text = "Pomodoro Cycle Completion Trend", style = MaterialTheme.typography.titleMedium)
                 CycleTrendLineChart(
                     cyclesTrend = cyclesTrend,
                     modifier = Modifier

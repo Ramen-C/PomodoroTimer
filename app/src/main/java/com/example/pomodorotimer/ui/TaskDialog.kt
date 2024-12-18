@@ -51,7 +51,7 @@ fun TaskDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("选择任务") },
+        title = { Text("Select Task") },
         text = {
             Column {
                 TaskList(
@@ -72,13 +72,13 @@ fun TaskDialog(
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("新建任务")
+                    Text("Create New Task")
                 }
             }
         },
         confirmButton = {
             Button(onClick = onDismiss) {
-                Text("关闭")
+                Text("Close")
             }
         }
     )
@@ -91,7 +91,7 @@ fun TaskList(
     onTaskLongPressed: (Task) -> Unit // 新增回调，用于长按
 ) {
     if (tasks.isEmpty()) {
-        Text("没有可选择的任务", style = MaterialTheme.typography.bodyLarge)
+        Text("No tasks available to select", style = MaterialTheme.typography.bodyLarge)
     } else {
         LazyColumn {
             items(tasks) { task ->
