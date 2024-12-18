@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">番茄时钟</string>
+    <string name="settings">设置</string>
+    <string name="toggle_language">切换语言 (中/英)</string>
+    <string name="work_time">工作时间（分钟）</string>
+    <string name="save_settings">保存设置</string>
+</resources>

@@ -1,6 +1,11 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.pomodorotimer.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.res.Configuration
+import android.os.Build
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -8,13 +13,44 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.pomodorotimer.R
 import com.example.pomodorotimer.controller.AppTheme
 import com.example.pomodorotimer.controller.TimerController
+import java.util.Locale
+/**
+ * 切换语言函数 (中文 <-> 英文)
+ * @param context 当前的 Context
+ */
+fun toggleAppLanguage(context: Context) {
+    val currentLocale = context.resources.configuration.locales[0]
+    val newLocale = if (currentLocale.language == "zh") Locale.ENGLISH else Locale.SIMPLIFIED_CHINESE
+
+    // 更新 Configuration 并创建一个新的 Context
+    val configuration = Configuration(context.resources.configuration)
+    configuration.setLocale(newLocale)
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        context.createConfigurationContext(configuration)
+    } else {
+        context.resources.updateConfiguration(configuration, context.resources.displayMetrics)
+    }
+
+    // 强制重建当前的 Activity，确保生效
+    if (context is android.app.Activity) {
+        context.recreate()
+    }
+}
+
 
 @SuppressLint("DefaultLocale")
 @Composable
 fun SettingsScreen(timerController: TimerController) {
+    // 语言切换逻辑
+    val context = LocalContext.current
+
     // 原有状态和变量
     var workTime by remember { mutableIntStateOf(timerController.getCurrentWorkTimeInMinutes()) }
     var shortBreakTime by remember { mutableIntStateOf(timerController.getCurrentShortBreakTimeInMinutes()) }
@@ -44,9 +80,10 @@ fun SettingsScreen(timerController: TimerController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "设置",
+            text = stringResource(id = R.string.settings),
             style = MaterialTheme.typography.headlineMedium
         )
+
 
         // 主题选择下拉框
         Box {
@@ -109,6 +146,15 @@ fun SettingsScreen(timerController: TimerController) {
             )
         }
 
+        Button(
+            onClick = { toggleAppLanguage(context) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        ) {
+            Text(stringResource(id = R.string.toggle_language))
+        }
+
         // **时间设置卡片**
         TimeSettingCard("工作时间（分钟）", workTime, 1f..60f, 59) { workTime = it }
         TimeSettingCard("短休息时间（分钟）", shortBreakTime, 1f..30f, 29) { shortBreakTime = it }
@@ -127,7 +173,7 @@ fun SettingsScreen(timerController: TimerController) {
                 .padding(vertical = 24.dp), // 增加底部边距，避免按钮过于贴近屏幕底部
             shape = MaterialTheme.shapes.medium
         ) {
-            Text("保存设置")
+            Text(stringResource(id = R.string.save_settings))
         }
 
         // **模式切换信息弹窗**
