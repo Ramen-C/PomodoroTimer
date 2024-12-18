@@ -31,12 +31,6 @@ class TaskActivity : ComponentActivity() {
 
         setContent {
             val currentTheme by timerController.currentTheme.collectAsState()
-
-            PomodoroTimerTheme(theme = currentTheme) {
-                TaskScreen(taskController, onTaskSelected = {
-                    finish()
-                })
-            }
         }
     }
 }

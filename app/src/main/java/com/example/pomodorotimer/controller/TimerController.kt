@@ -34,6 +34,10 @@ class TimerController(private val taskController: TaskController) : ViewModel() 
     private val _isAutoMode = MutableStateFlow(false)
     val isAutoMode: StateFlow<Boolean> get() = _isAutoMode
 
+    //摇晃检测状态
+    private val _isShakeToPauseEnabled = MutableStateFlow(false)
+    val isShakeToPauseEnabled: StateFlow<Boolean> get() = _isShakeToPauseEnabled
+
     // 提示显示状态
     private val _promptShow = MutableStateFlow(false)
     val promptShow: StateFlow<Boolean> get() = _promptShow
@@ -156,6 +160,11 @@ class TimerController(private val taskController: TaskController) : ViewModel() 
     // 新增方法：判断当前是否是长休息
     fun isCurrentLongBreak(): Boolean {
         return timerModel.isLongBreak()
+    }
+
+    //摇晃检测
+    fun setShakeToPauseEnabled(enabled: Boolean) {
+        _isShakeToPauseEnabled.value = enabled
     }
 
     private val _currentTheme = MutableStateFlow(AppTheme.RED)

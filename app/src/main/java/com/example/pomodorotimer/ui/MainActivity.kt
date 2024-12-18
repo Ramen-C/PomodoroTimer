@@ -31,6 +31,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import com.example.pomodorotimer.service.TimerService
 import com.example.pomodorotimer.theme.PomodoroTimerTheme
 
@@ -161,9 +162,11 @@ fun PomodoroTimerApp(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("timer") {
+                val context = LocalContext.current
                 TimerScreen(
                     timerController = timerController,
-                    taskController = taskController
+                    taskController = taskController,
+                    context = context
                 )
             }
             composable("progress") {

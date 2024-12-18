@@ -31,9 +31,6 @@ class ProgressActivity : ComponentActivity() {
             // 获取当前主题的状态
             val currentTheme by timerController.currentTheme.collectAsState()
 
-            PomodoroTimerTheme(theme = currentTheme) {
-                ProgressScreen(taskController)
-            }
         }
     }
 }

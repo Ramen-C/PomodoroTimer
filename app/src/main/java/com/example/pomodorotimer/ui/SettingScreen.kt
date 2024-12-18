@@ -1,8 +1,9 @@
-// SettingScreen.kt
 package com.example.pomodorotimer.ui
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,15 +16,9 @@ import com.example.pomodorotimer.controller.TimerController
 @Composable
 fun SettingsScreen(timerController: TimerController) {
     // 原有状态和变量
-    var workTime by remember {
-        mutableIntStateOf(timerController.getCurrentWorkTimeInMinutes())
-    }
-    var shortBreakTime by remember {
-        mutableIntStateOf(timerController.getCurrentShortBreakTimeInMinutes())
-    }
-    var longBreakTime by remember {
-        mutableIntStateOf(timerController.getCurrentLongBreakTimeInMinutes())
-    }
+    var workTime by remember { mutableIntStateOf(timerController.getCurrentWorkTimeInMinutes()) }
+    var shortBreakTime by remember { mutableIntStateOf(timerController.getCurrentShortBreakTimeInMinutes()) }
+    var longBreakTime by remember { mutableIntStateOf(timerController.getCurrentLongBreakTimeInMinutes()) }
 
     val isAutoMode by timerController.isAutoMode.collectAsState()
     var showConfirmation by remember { mutableStateOf(false) }
@@ -34,10 +29,17 @@ fun SettingsScreen(timerController: TimerController) {
     val themes = listOf(AppTheme.RED, AppTheme.BLUE, AppTheme.GREEN)
     var expanded by remember { mutableStateOf(false) }
 
+    // 摇晃检测
+    val isShakeToPauseEnabled by timerController.isShakeToPauseEnabled.collectAsState()
+
+    // 滚动状态
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(12.dp),
+            .padding(12.dp)
+            .verticalScroll(scrollState), // 启用滚动
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -45,22 +47,6 @@ fun SettingsScreen(timerController: TimerController) {
             text = "设置",
             style = MaterialTheme.typography.headlineMedium
         )
-
-        // 自动/手动模式切换按钮
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(
-                onClick = {
-                    timerController.toggleAutoMode()
-                    showModeSwitchMessage = if (isAutoMode) "当前模式：手动模式" else "当前模式：自动模式"
-                },
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(if (isAutoMode) "切换为手动模式" else "切换为自动模式")
-            }
-        }
 
         // 主题选择下拉框
         Box {
@@ -83,12 +69,52 @@ fun SettingsScreen(timerController: TimerController) {
             }
         }
 
-        // 工作时间
+        // **“摇晃停止计时”开关**
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "启用摇晃停止计时",
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Switch(
+                checked = isShakeToPauseEnabled,
+                onCheckedChange = { enabled ->
+                    timerController.setShakeToPauseEnabled(enabled)
+                }
+            )
+        }
+
+        // **“启用自动模式”开关**
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "启用自动模式",
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Switch(
+                checked = isAutoMode,
+                onCheckedChange = { enabled ->
+                    timerController.toggleAutoMode()
+                }
+            )
+        }
+
+        // **时间设置卡片**
         TimeSettingCard("工作时间（分钟）", workTime, 1f..60f, 59) { workTime = it }
         TimeSettingCard("短休息时间（分钟）", shortBreakTime, 1f..30f, 29) { shortBreakTime = it }
         TimeSettingCard("长休息时间（分钟）", longBreakTime, 1f..60f, 59) { longBreakTime = it }
 
-        // 保存按钮
+        // **保存按钮**
         Button(
             onClick = {
                 timerController.updateWorkTime(workTime)
@@ -98,13 +124,13 @@ fun SettingsScreen(timerController: TimerController) {
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 12.dp),
+                .padding(vertical = 24.dp), // 增加底部边距，避免按钮过于贴近屏幕底部
             shape = MaterialTheme.shapes.medium
         ) {
             Text("保存设置")
         }
 
-        // 模式切换信息弹窗
+        // **模式切换信息弹窗**
         showModeSwitchMessage?.let { message ->
             AlertDialog(
                 onDismissRequest = { showModeSwitchMessage = null },
@@ -118,7 +144,7 @@ fun SettingsScreen(timerController: TimerController) {
             )
         }
 
-        // 设置保存确认弹窗
+        // **设置保存确认弹窗**
         if (showConfirmation) {
             AlertDialog(
                 onDismissRequest = { showConfirmation = false },
