@@ -110,7 +110,7 @@ class TaskController(private val taskModel: TaskModel) {
         }
     }
 
-    // 获取Flow形式的数据，用于ProgressScreen
+    // 获取 Flow 形式的数据，用于 ProgressScreen
     fun getTaskTimeStatsFlow(): Flow<List<TaskTimeStat>> {
         return taskModel.getTaskTimeStatsFlow()
     }

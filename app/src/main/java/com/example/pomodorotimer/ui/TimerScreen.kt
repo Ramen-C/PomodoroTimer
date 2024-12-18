@@ -1,3 +1,4 @@
+// TimerScreen.kt
 package com.example.pomodorotimer.ui
 
 import android.annotation.SuppressLint
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pomodorotimer.controller.TaskController
 import com.example.pomodorotimer.controller.TimerController
+import kotlinx.coroutines.launch
 import kotlin.math.sqrt
 
 @SuppressLint("DefaultLocale")
@@ -35,16 +37,17 @@ fun TimerScreen(
     val currentTask by timerController.currentTask.collectAsState()
     val isAutoMode by timerController.isAutoMode.collectAsState()
     val promptShow by timerController.promptShow.collectAsState()
+    val initialTime by timerController.initialTime.collectAsState()
 
     var showTaskDialog by remember { mutableStateOf(false) }
     var showPromptDialog by remember { mutableStateOf(false) }
     var promptMessage by remember { mutableStateOf("") }
     var showShakeWarningDialog by remember { mutableStateOf(false) }
 
-    //摇晃检测功能
+    // 摇晃检测功能
     val isShakeToPauseEnabled by timerController.isShakeToPauseEnabled.collectAsState()
 
-    // Set up the SensorManager and sensors
+    // 设置 SensorManager 和传感器
     val sensorManager = remember { context.getSystemService(Context.SENSOR_SERVICE) as SensorManager }
     val accelerometer = remember { sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) }
 
@@ -56,7 +59,7 @@ fun TimerScreen(
                     val y = it.values[1]
                     val z = it.values[2]
                     val magnitude = sqrt(x * x + y * y + z * z)
-                    if (magnitude > 15f && isRunning) { // Check for significant movement (i.e., shaking) when timer is running
+                    if (magnitude > 15f && isRunning) { // 检测到摇晃时暂停计时
                         showShakeWarningDialog = true
                         timerController.pauseTimer()
                     }
@@ -67,7 +70,7 @@ fun TimerScreen(
         }
     }
 
-    // Register sensor listener when the timer starts
+    // 注册传感器监听器
     LaunchedEffect(isRunning, isShakeToPauseEnabled) {
         if (isRunning && isShakeToPauseEnabled) {
             sensorManager.registerListener(sensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_UI)
@@ -76,15 +79,16 @@ fun TimerScreen(
         }
     }
 
-    // For button color animation
+    // 按钮颜色动画
     val buttonColor by animateColorAsState(
         targetValue = if (isRunning) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary,
         label = ""
     )
 
-    val totalTime = remember { timeLeft }
-    val progress = timeLeft / totalTime.toFloat()
+    // 计算进度
+    val progress = if (initialTime > 0) timeLeft / initialTime.toFloat() else 0f
 
+    // 监听提示显示
     LaunchedEffect(promptShow) {
         if (promptShow) {
             showPromptDialog = true

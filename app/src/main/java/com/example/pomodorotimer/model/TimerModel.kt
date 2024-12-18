@@ -14,13 +14,14 @@ class TimerModel(
 ) {
     var timeLeft = workTime
     var isWorkingState = true
+        private set
     private var cyclesCompleted = 0
     private var shortBreakCount = 0
 
     fun resetTimer() {
-        timeLeft = if (isWorkingState) workTime else getCurrentBreakTime()
+        timeLeft = getInitialTime()
         // 重置短休息计数
-        if (!isWorkingState && shortBreakCount == 0) {
+        if (!isWorkingState) {
             shortBreakCount = 0
         }
     }
@@ -99,5 +100,10 @@ class TimerModel(
         } else {
             if (shortBreakCount == 0) CycleType.LongBreak else CycleType.ShortBreak
         }
+    }
+
+    // 新增方法：获取当前周期的初始时间
+    fun getInitialTime(): Int {
+        return if (isWorkingState) workTime else getCurrentBreakTime()
     }
 }

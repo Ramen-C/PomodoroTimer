@@ -6,6 +6,7 @@ import com.example.pomodorotimer.data.CycleDao
 import com.example.pomodorotimer.data.TaskDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 class TaskModel(private val taskDao: TaskDao, private val cycleDao: CycleDao) {
@@ -48,7 +49,7 @@ class TaskModel(private val taskDao: TaskDao, private val cycleDao: CycleDao) {
     // 获取任务时间统计
     suspend fun getTaskTimeStats(): List<TaskTimeStat> {
         return withContext(Dispatchers.IO) {
-            taskDao.getTaskTimeStats().value ?: emptyList()
+            taskDao.getTaskTimeStatsFlow().first()
         }
     }
 
@@ -62,14 +63,14 @@ class TaskModel(private val taskDao: TaskDao, private val cycleDao: CycleDao) {
     // 获取每日番茄周期数
     suspend fun getCyclesPerDay(): List<CycleCount> {
         return withContext(Dispatchers.IO) {
-            cycleDao.getCyclesPerDay()
+            cycleDao.getCyclesPerDayFlow().first()
         }
     }
 
     // 获取番茄周期完成趋势
     suspend fun getCyclesTrend(): List<CycleCount> {
         return withContext(Dispatchers.IO) {
-            cycleDao.getCyclesTrend()
+            cycleDao.getCyclesTrendFlow().first()
         }
     }
 
@@ -79,7 +80,7 @@ class TaskModel(private val taskDao: TaskDao, private val cycleDao: CycleDao) {
         return emptyMap()
     }
 
-    // 使用Flow的统计数据获取方法
+    // 使用 Flow 的统计数据获取方法
     fun getTaskTimeStatsFlow(): Flow<List<TaskTimeStat>> {
         return taskDao.getTaskTimeStatsFlow()
     }
