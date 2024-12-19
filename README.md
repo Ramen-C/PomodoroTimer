@@ -1,6 +1,6 @@
 # Pomodoro Timer Application
 
-This project implements a Pomodoro Timer application built with **Jetpack Compose**, **ViewModel**, **StateFlow**, and **Room** database, leveraging **MPAndroidChart** for data visualization. It aims to help users manage their productivity by providing a structured work-rest cycle, task management features, and insights into their progress over time.
+This project implements a Pomodoro Timer application built with **Jetpack Compose**, **StateFlow**, and **Room** database, leveraging **MPAndroidChart** for data visualization. It aims to help users manage their productivity by providing a structured work-rest cycle, task management features, and insights into their progress over time.
 
 ## Key Features
 
